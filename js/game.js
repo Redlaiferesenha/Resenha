@@ -126,8 +126,8 @@ function selecionarClasse(op) {
             gameState.player = { classeNome: "Assassino", classeId: 3, vidamaxpla: 20, vidaatualpla: 20, atkpla: 4, danpla: 3, defpla: 14, tipdan: 4, critico: 20, energiamax: 14, energiaatual: 14, rd: 0 };
             break;
         case 4:
-            gameState.player = { classeNome: "Energético", classeId: 4, vidamaxpla: 20, vidaatualpla: 20, atkpla: 3, danpla: 2, defpla: 12, tipdan: 4, critico: 20, energiamax: 170, energiaatual: 170, rd: 0 };
-            gameState.danchama += 1000;
+            gameState.player = { classeNome: "Energético", classeId: 4, vidamaxpla: 20, vidaatualpla: 20, atkpla: 3, danpla: 2, defpla: 12, tipdan: 4, critico: 20, energiamax: 17, energiaatual: 17, rd: 0 };
+            gameState.danchama += 1;
             gameState.redconge += 1;
             gameState.danven += 1;
             gameState.rodormin += 1;
