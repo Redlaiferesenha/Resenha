@@ -8,9 +8,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="min-h-screen flex flex-col justify-between relative bg-slate-950">
+<body class="min-h-screen flex flex-col justify-between relative bg-slate-950 overflow-x-hidden">
 
-    <canvas id="bgCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+    <div id="bgAmbiente" class="fixed inset-0 bg-cover bg-center transition-all duration-700 pointer-events-none z-0 opacity-30"></div>
+    
+    <canvas id="bgCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-50"></canvas>
 
     <div class="relative z-10 flex-1 flex flex-col justify-between p-4 md:p-6 max-w-7xl mx-auto w-full">
 
