@@ -155,6 +155,8 @@ function selecionarClasse(op) {
     logMsg(`Você entrou na masmorra como <b class="text-amber-400">${gameState.player.classeNome}</b>!`, 'system');
     
     gerarNovoAmbiente();
+    document.getElementById('telaSelecaoClasse').classList.add('hidden');
+    document.getElementById('telaBatalha').classList.remove('hidden');
     atualizarTela();
 }
 
