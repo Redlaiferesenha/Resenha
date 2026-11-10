@@ -320,6 +320,13 @@ function verificarVitoriaInimigo() {
             gameState.bossAtivo = false;
             gameState.mortosTotais++;
             dropItemBoss();
+            
+            gameState.inimigosParaAmbiente++;
+            if(gameState.inimigosParaAmbiente >= 2) {
+                gameState.inimigosParaAmbiente = 0;
+                gerarNovoAmbiente();
+            }
+
             spawnNovoInimigo();
             atualizarTela();
             return true;
@@ -329,8 +336,15 @@ function verificarVitoriaInimigo() {
             logMsg(`☠️ Você derrotou ${gameState.inimigo.nome}!`, 'player');
             gameState.mortosTotais++;
             gameState.mortosNormais++;
+            
+            
+            gameState.inimigosParaAmbiente++;
+            if(gameState.inimigosParaAmbiente >= 2) {
+                gameState.inimigosParaAmbiente = 0;
+                gerarNovoAmbiente();
+            }
+
             abrirModalLoot();
-            // A cada 5 abates, surge um Boss aleatório
             if (gameState.mortosTotais % 5 === 0) {
                 gameState.bossAtivo = true;
                 
@@ -365,7 +379,7 @@ function verificarVitoriaInimigo() {
 function spawnNovoInimigo() {
     limparLog();
 
-    // Sorteia um monstro aleatório
+    
     const modelo = BESTIARIO_INIMIGOS[Math.floor(Math.random() * BESTIARIO_INIMIGOS.length)];
     const multiplicador = 1 + (gameState.mortosTotais * 0.1); // Aumenta 10% de força a cada vitória
 
