@@ -851,13 +851,15 @@ function renderBadgesStatus(statusArray) {
         container.appendChild(span);
     });
 }
-// --- SISTEMA DE LOGIN E CONTAS ---
 let currentUser = "";
 
 function registrar() {
-    let u = document.getElementById('inputUser').value.trim();
+    // Transforma em minúsculo e remove espaços para evitar duplicatas falsas
+    let u = document.getElementById('inputUser').value.trim().toLowerCase(); 
     let p = document.getElementById('inputPass').value.trim();
-    if (!u || !p) return alert("Preencha usuário e senha!");
+    
+    if (u === "" || p === "") return alert("Preencha usuário e senha!");
+    if (u.length < 3) return alert("O nome de usuário deve ter pelo menos 3 letras/números.");
     
     let users = JSON.parse(localStorage.getItem('rpgUsers') || '{}');
     if (users[u]) return alert("Este nome de usuário já existe!");
@@ -868,13 +870,14 @@ function registrar() {
 }
 
 function logar() {
-    let u = document.getElementById('inputUser').value.trim();
+    let u = document.getElementById('inputUser').value.trim().toLowerCase();
     let p = document.getElementById('inputPass').value.trim();
-    if (!u || !p) return alert("Preencha usuário e senha!");
+    
+    if (u === "" || p === "") return alert("Preencha usuário e senha!");
     
     let users = JSON.parse(localStorage.getItem('rpgUsers') || '{}');
     if (users[u] === p) {
-        currentUser = u;
+        currentUser = document.getElementById('inputUser').value.trim(); // Salva como o jogador digitou originalmente para o placar
         document.getElementById('telaLogin').classList.add('hidden');
         document.getElementById('telaSelecaoClasse').classList.remove('hidden');
     } else {
