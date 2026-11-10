@@ -117,7 +117,7 @@ function selecionarClasse(op) {
     gameState.player.classeId = op;
     switch(op) {
         case 1:
-            gameState.player = { classeNome: "Neutro", classeId: 1, vidamaxpla: 30, vidaatualpla: 30, atkpla: 3, danpla: 2, defpla: 14, tipdan: 4, critico: 20, energiamax: 12, energiaatual: 12, rd: 0 };
+            gameState.player = { classeNome: "Neutro", classeId: 1, vidamaxpla: 30, vidaatualpla: 30, atkpla: 300, danpla: 200, defpla: 14, tipdan: 4, critico: 20, energiamax: 12, energiaatual: 12, rd: 0 };
             break;
         case 2:
             gameState.player = { classeNome: "Defensor", classeId: 2, vidamaxpla: 35, vidaatualpla: 35, atkpla: 2, danpla: 2, defpla: 16, tipdan: 4, critico: 20, energiamax: 12, energiaatual: 12, rd: 2 };
