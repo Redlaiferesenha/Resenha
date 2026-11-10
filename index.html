@@ -16,43 +16,22 @@
 
     <div class="relative z-10 flex-1 flex flex-col justify-between p-4 md:p-6 max-w-7xl mx-auto w-full">
 
-        <header id="headerAmbiente" class="hidden mb-4 bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 shadow-xl backdrop-blur transition-all duration-500">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-3">
-                <div class="flex items-center gap-3">
-                    <div id="ambienteIcone" class="text-3xl p-2 bg-slate-800 rounded-xl border border-slate-600">🏛️</div>
-                    <div>
-                        <h2 id="ambienteNome" class="text-lg font-bold text-amber-400 font-cinzel uppercase tracking-wider">Ambiente: Neutro</h2>
-                        <p id="ambienteDesc" class="text-xs text-slate-300">Nenhum efeito alterado neste ambiente.</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4 text-xs font-semibold">
-                    <div class="bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300">
-                        Inimigos no Ambiente: <span id="txtProgAmbiente" class="text-amber-400 font-bold">0/2</span>
-                    </div>
-                    <div class="bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300">
-                        Abates Totais: <span id="txtAbates" class="text-emerald-400 font-bold">0</span>
-                    </div>
-                    <div class="bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300">
-                        Rodada: <span id="txtRodada" class="text-indigo-400 font-bold">1</span>
-                    </div>
-                </div>
+        <!-- 1. TELA DE LOGIN (Visível por padrão) -->
+        <section id="telaLogin" class="my-auto py-8 max-w-sm mx-auto w-full bg-slate-900/90 border border-slate-700 p-6 rounded-2xl shadow-2xl backdrop-blur text-center">
+            <h1 class="text-3xl font-black text-amber-400 font-cinzel mb-2">LOGIN</h1>
+            <p class="text-xs text-slate-400 mb-6">Crie uma conta ou faça login para jogar.</p>
+            
+            <input type="text" id="inputUser" placeholder="Nome de Usuário" class="w-full mb-3 p-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-200 outline-none focus:border-amber-500">
+            <input type="password" id="inputPass" placeholder="Senha" class="w-full mb-6 p-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-200 outline-none focus:border-amber-500">
+            
+            <div class="flex gap-3">
+                <button onclick="logar()" class="flex-1 py-3 bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 font-bold rounded-xl border border-amber-500/40 transition">Entrar</button>
+                <button onclick="registrar()" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl border border-slate-600 transition">Criar Conta</button>
             </div>
-        </header>
-        <div id="telaBatalha" class="hidden">
-            <section id="telaLogin" class="my-auto py-8 max-w-sm mx-auto w-full bg-slate-900/90 border border-slate-700 p-6 rounded-2xl shadow-2xl backdrop-blur text-center">
-                <h1 class="text-3xl font-black text-amber-400 font-cinzel mb-2">LOGIN</h1>
-                <p class="text-xs text-slate-400 mb-6">Crie uma conta ou faça login para jogar.</p>
-                
-                <input type="text" id="inputUser" placeholder="Nome de Usuário" class="w-full mb-3 p-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-200 outline-none focus:border-amber-500">
-                <input type="password" id="inputPass" placeholder="Senha" class="w-full mb-6 p-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-200 outline-none focus:border-amber-500">
-                
-                <div class="flex gap-3">
-                    <button onclick="logar()" class="flex-1 py-3 bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 font-bold rounded-xl border border-amber-500/40 transition">Entrar</button>
-                    <button onclick="registrar()" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl border border-slate-600 transition">Criar Conta</button>
-                </div>
-            </section>
-        </div>
-        <section id="telaSelecaoClasse" class="my-auto py-8">
+        </section>
+
+        <!-- 2. TELA DE SELEÇÃO DE CLASSE (Oculta por padrão) -->
+        <section id="telaSelecaoClasse" class="hidden my-auto py-8">
             <div class="text-center mb-8">
                 <h1 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-300 to-amber-500 tracking-wide uppercase mb-2">
                     joguin resenha
@@ -161,184 +140,212 @@
             </div>
         </section>
 
-        <main id="telaCombate" class="hidden flex-1 flex flex-col justify-between gap-4">
+        <!-- 3. TELA DO JOGO COMPLETO (Oculta por padrão) -->
+        <div id="telaJogo" class="hidden flex-1 flex flex-col w-full">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <header id="headerAmbiente" class="mb-4 bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 shadow-xl backdrop-blur transition-all duration-500">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-3">
+                    <div class="flex items-center gap-3">
+                        <div id="ambienteIcone" class="text-3xl p-2 bg-slate-800 rounded-xl border border-slate-600">🏛️</div>
+                        <div>
+                            <h2 id="ambienteNome" class="text-lg font-bold text-amber-400 font-cinzel uppercase tracking-wider">Ambiente: Neutro</h2>
+                            <p id="ambienteDesc" class="text-xs text-slate-300">Nenhum efeito alterado neste ambiente.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 text-xs font-semibold">
+                        <div class="bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300">
+                            Inimigos no Ambiente: <span id="txtProgAmbiente" class="text-amber-400 font-bold">0/2</span>
+                        </div>
+                        <div class="bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300">
+                            Abates Totais: <span id="txtAbates" class="text-emerald-400 font-bold">0</span>
+                        </div>
+                        <div class="bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300">
+                            Rodada: <span id="txtRodada" class="text-indigo-400 font-bold">1</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main id="telaCombate" class="flex-1 flex flex-col justify-between gap-4">
                 
-                <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur relative overflow-hidden">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center gap-3">
-                            <img id="playerAvatarImg" class="w-12 h-12 rounded-xl object-cover border-2 border-amber-500/60" alt="Avatar Player">
-                            <div>
-                                <span id="playerClasseBadge" class="text-[10px] uppercase font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded">Neutro</span>
-                                <h3 class="text-lg font-bold text-slate-100 font-cinzel">HERÓI (VOCÊ)</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-2 mb-4">
-                        <div>
-                            <div class="flex justify-between text-xs font-semibold mb-1">
-                                <span class="text-rose-400">❤️ Vida (HP)</span>
-                                <span id="txtPlayerVida">30 / 30</span>
-                            </div>
-                            <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
-                                <div id="barPlayerVida" class="bg-gradient-to-r from-rose-600 to-red-500 h-full bar-transition" style="width: 100%;"></div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between text-xs font-semibold mb-1">
-                                <span class="text-cyan-400">⚡ Stamina / Energia</span>
-                                <span id="txtPlayerEnergia">12 / 12</span>
-                            </div>
-                            <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
-                                <div id="barPlayerEnergia" class="bg-gradient-to-r from-cyan-600 to-blue-500 h-full bar-transition" style="width: 100%;"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-6 gap-1 text-center bg-slate-950/70 p-2 rounded-xl border border-slate-800/80 text-[11px]">
-                        <div>
-                            <div class="text-slate-400 uppercase">Atk</div>
-                            <div id="attrPlayerAtk" class="font-bold text-amber-400">+3</div>
-                        </div>
-                        <div>
-                            <div class="text-slate-400 uppercase">Dano</div>
-                            <div id="attrPlayerDano" class="font-bold text-red-400">+2</div>
-                        </div>
-                        <div>
-                            <div class="text-slate-400 uppercase">Def</div>
-                            <div id="attrPlayerDef" class="font-bold text-blue-400">14</div>
-                        </div>
-                        <div>
-                            <div class="text-slate-400 uppercase">RD</div>
-                            <div id="attrPlayerRD" class="font-bold text-teal-400">0</div>
-                        </div>
-                        <div>
-                            <div class="text-slate-400 uppercase">Dado</div>
-                            <div id="attrPlayerDado" class="font-bold text-purple-400">1d4</div>
-                        </div>
-                        <div>
-                            <div class="text-slate-400 uppercase">Crit</div>
-                            <div id="attrPlayerCrit" class="font-bold text-emerald-400">20</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="cardInimigoContainer" class="bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur relative overflow-hidden transition-all duration-300">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center gap-3">
-                            <img id="inimigoAvatarImg" class="w-16 h-16 rounded-xl object-cover border-2 border-red-500/60 shadow-md bg-slate-800" alt="Inimigo">
-                            <div>
-                                <span id="inimigoTipoBadge" class="text-[10px] uppercase font-bold bg-red-500/20 text-red-400 border border-red-500/40 px-2 py-0.5 rounded">Inimigo</span>
-                                <h3 id="inimigoNome" class="text-lg font-bold text-slate-100 font-cinzel">Goblin Nível 1</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-2 mb-4">
-                        <div>
-                            <div class="flex justify-between text-xs font-semibold mb-1">
-                                <span class="text-rose-400">❤️ Vida Inimigo</span>
-                                <span id="txtInimigoVida">25 / 25</span>
-                            </div>
-                            <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
-                                <div id="barInimigoVida" class="bg-gradient-to-r from-rose-600 to-red-500 h-full bar-transition" style="width: 100%;"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1">Efeitos Ativos:</div>
-                        <div id="containerStatusInimigo" class="flex flex-wrap gap-1.5 min-h-[26px]">
-                            <span class="text-xs text-slate-400 italic">Nenhum efeito ativo</span>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-4 gap-1 text-center bg-slate-950/70 p-2 rounded-xl border border-slate-800/80 text-[11px]">
-                        <div>
-                            <div class="text-slate-400 uppercase">Defesa</div>
-                            <div id="attrInimigoDef" class="font-bold text-blue-400">12</div>
-                        </div>
-                        <div>
-                            <div class="text-slate-400 uppercase">Bônus Atk</div>
-                            <div id="attrInimigoAtk" class="font-bold text-amber-400">+2</div>
-                        </div>
-                        <div>
-                            <div class="text-slate-400 uppercase">Bônus Dano</div>
-                            <div id="attrInimigoDano" class="font-bold text-red-400">+2</div>
-                        </div>
-                        <div>
-                            <div class="text-slate-400 uppercase">Dado</div>
-                            <div id="attrInimigoDado" class="font-bold text-purple-400">1d4</div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
-                
-                <div class="lg:col-span-6 bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur flex flex-col justify-between h-80">
-                    <h3 class="text-xs uppercase font-bold tracking-wider text-slate-400 font-cinzel">Ações de Combate</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     
-                    <div class="grid grid-cols-2 gap-3 my-auto">
-                        <button onclick="acaoAtacar()" class="group relative bg-gradient-to-br from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white p-3.5 rounded-xl border border-red-400/30 font-bold transition-all shadow-lg hover:shadow-red-500/20 active:scale-95 text-left flex items-center gap-3">
-                            <span class="text-2xl group-hover:scale-110 transition">⚔️</span>
-                            <div>
-                                <div class="text-sm">Atacar</div>
-                                <div class="text-[10px] font-normal text-red-200 opacity-80">Rolagem d20 + Atk</div>
+                    <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <img id="playerAvatarImg" class="w-12 h-12 rounded-xl object-cover border-2 border-amber-500/60" alt="Avatar Player">
+                                <div>
+                                    <span id="playerClasseBadge" class="text-[10px] uppercase font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded">Neutro</span>
+                                    <h3 class="text-lg font-bold text-slate-100 font-cinzel">HERÓI (VOCÊ)</h3>
+                                </div>
                             </div>
-                        </button>
+                        </div>
 
-                        <button onclick="acaoContraAtacar()" class="group relative bg-gradient-to-br from-slate-800 to-slate-700 hover:from-slate-700 hover:to-slate-600 text-slate-100 p-3.5 rounded-xl border border-slate-500/30 font-bold transition-all shadow-lg hover:shadow-slate-500/20 active:scale-95 text-left flex items-center gap-3">
-                            <span class="text-2xl group-hover:scale-110 transition">🛡️</span>
+                        <div class="space-y-2 mb-4">
                             <div>
-                                <div class="text-sm">Contra-Atacar</div>
-                                <div class="text-[10px] font-normal text-slate-300 opacity-80">Reage ao erro inimigo</div>
+                                <div class="flex justify-between text-xs font-semibold mb-1">
+                                    <span class="text-rose-400">❤️ Vida (HP)</span>
+                                    <span id="txtPlayerVida">30 / 30</span>
+                                </div>
+                                <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
+                                    <div id="barPlayerVida" class="bg-gradient-to-r from-rose-600 to-red-500 h-full bar-transition" style="width: 100%;"></div>
+                                </div>
                             </div>
-                        </button>
 
-                        <button onclick="abrirModalHabilidades()" class="group relative bg-gradient-to-br from-purple-600 to-indigo-700 hover:from-purple-500 hover:to-indigo-600 text-white p-3.5 rounded-xl border border-purple-400/30 font-bold transition-all shadow-lg hover:shadow-purple-500/20 active:scale-95 text-left flex items-center gap-3">
-                            <span class="text-2xl group-hover:scale-110 transition">✨</span>
                             <div>
-                                <div class="text-sm">Habilidades</div>
-                                <div class="text-[10px] font-normal text-purple-200 opacity-80">Feitiços e Golpes Especial</div>
+                                <div class="flex justify-between text-xs font-semibold mb-1">
+                                    <span class="text-cyan-400">⚡ Stamina / Energia</span>
+                                    <span id="txtPlayerEnergia">12 / 12</span>
+                                </div>
+                                <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
+                                    <div id="barPlayerEnergia" class="bg-gradient-to-r from-cyan-600 to-blue-500 h-full bar-transition" style="width: 100%;"></div>
+                                </div>
                             </div>
-                        </button>
+                        </div>
 
-                        <button onclick="acaoDescansar()" class="group relative bg-gradient-to-br from-emerald-700 to-teal-800 hover:from-emerald-600 hover:to-teal-700 text-white p-3.5 rounded-xl border border-emerald-400/30 font-bold transition-all shadow-lg hover:shadow-emerald-500/20 active:scale-95 text-left flex items-center gap-3">
-                            <span class="text-2xl group-hover:scale-110 transition">💤</span>
+                        <div class="grid grid-cols-6 gap-1 text-center bg-slate-950/70 p-2 rounded-xl border border-slate-800/80 text-[11px]">
                             <div>
-                                <div class="text-sm">Descansar</div>
-                                <div class="text-[10px] font-normal text-emerald-200 opacity-80">Recupera +4 Energia</div>
+                                <div class="text-slate-400 uppercase">Atk</div>
+                                <div id="attrPlayerAtk" class="font-bold text-amber-400">+3</div>
                             </div>
-                        </button>
+                            <div>
+                                <div class="text-slate-400 uppercase">Dano</div>
+                                <div id="attrPlayerDano" class="font-bold text-red-400">+2</div>
+                            </div>
+                            <div>
+                                <div class="text-slate-400 uppercase">Def</div>
+                                <div id="attrPlayerDef" class="font-bold text-blue-400">14</div>
+                            </div>
+                            <div>
+                                <div class="text-slate-400 uppercase">RD</div>
+                                <div id="attrPlayerRD" class="font-bold text-teal-400">0</div>
+                            </div>
+                            <div>
+                                <div class="text-slate-400 uppercase">Dado</div>
+                                <div id="attrPlayerDado" class="font-bold text-purple-400">1d4</div>
+                            </div>
+                            <div>
+                                <div class="text-slate-400 uppercase">Crit</div>
+                                <div id="attrPlayerCrit" class="font-bold text-emerald-400">20</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="text-[11px] text-slate-500 text-center border-t border-slate-800/80 pt-2">
-                        Turno automático do adversário após cada ação efetuada.
+                    <div id="cardInimigoContainer" class="bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur relative overflow-hidden transition-all duration-300">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <img id="inimigoAvatarImg" class="w-16 h-16 rounded-xl object-cover border-2 border-red-500/60 shadow-md bg-slate-800" alt="Inimigo">
+                                <div>
+                                    <span id="inimigoTipoBadge" class="text-[10px] uppercase font-bold bg-red-500/20 text-red-400 border border-red-500/40 px-2 py-0.5 rounded">Inimigo</span>
+                                    <h3 id="inimigoNome" class="text-lg font-bold text-slate-100 font-cinzel">Goblin Nível 1</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2 mb-4">
+                            <div>
+                                <div class="flex justify-between text-xs font-semibold mb-1">
+                                    <span class="text-rose-400">❤️ Vida Inimigo</span>
+                                    <span id="txtInimigoVida">25 / 25</span>
+                                </div>
+                                <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
+                                    <div id="barInimigoVida" class="bg-gradient-to-r from-rose-600 to-red-500 h-full bar-transition" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1">Efeitos Ativos:</div>
+                            <div id="containerStatusInimigo" class="flex flex-wrap gap-1.5 min-h-[26px]">
+                                <span class="text-xs text-slate-400 italic">Nenhum efeito ativo</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-1 text-center bg-slate-950/70 p-2 rounded-xl border border-slate-800/80 text-[11px]">
+                            <div>
+                                <div class="text-slate-400 uppercase">Defesa</div>
+                                <div id="attrInimigoDef" class="font-bold text-blue-400">12</div>
+                            </div>
+                            <div>
+                                <div class="text-slate-400 uppercase">Bônus Atk</div>
+                                <div id="attrInimigoAtk" class="font-bold text-amber-400">+2</div>
+                            </div>
+                            <div>
+                                <div class="text-slate-400 uppercase">Bônus Dano</div>
+                                <div id="attrInimigoDano" class="font-bold text-red-400">+2</div>
+                            </div>
+                            <div>
+                                <div class="text-slate-400 uppercase">Dado</div>
+                                <div id="attrInimigoDado" class="font-bold text-purple-400">1d4</div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
 
-                <div class="lg:col-span-6 bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur flex flex-col justify-between h-80">
-                    <div class="flex justify-between items-center mb-2 pb-2 border-b border-slate-800">
-                        <h3 class="text-xs uppercase font-bold tracking-wider text-slate-400 font-cinzel flex items-center gap-2">
-                            <span>📜</span> Log da Batalha
-                        </h3>
-                        <button onclick="limparLog()" class="text-[10px] text-slate-400 hover:text-slate-200 transition">Limpar</button>
-                    </div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
                     
-                    <div id="combatLog" class="flex-1 overflow-y-auto space-y-1.5 pr-2 text-xs font-mono">
-                        <div class="text-slate-500 italic">[Sistema] Bem-vindo à masmorra! O combate começou.</div>
+                    <div class="lg:col-span-6 bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur flex flex-col justify-between h-80">
+                        <h3 class="text-xs uppercase font-bold tracking-wider text-slate-400 font-cinzel">Ações de Combate</h3>
+                        
+                        <div class="grid grid-cols-2 gap-3 my-auto">
+                            <button onclick="acaoAtacar()" class="group relative bg-gradient-to-br from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white p-3.5 rounded-xl border border-red-400/30 font-bold transition-all shadow-lg hover:shadow-red-500/20 active:scale-95 text-left flex items-center gap-3">
+                                <span class="text-2xl group-hover:scale-110 transition">⚔️</span>
+                                <div>
+                                    <div class="text-sm">Atacar</div>
+                                    <div class="text-[10px] font-normal text-red-200 opacity-80">Rolagem d20 + Atk</div>
+                                </div>
+                            </button>
+
+                            <button onclick="acaoContraAtacar()" class="group relative bg-gradient-to-br from-slate-800 to-slate-700 hover:from-slate-700 hover:to-slate-600 text-slate-100 p-3.5 rounded-xl border border-slate-500/30 font-bold transition-all shadow-lg hover:shadow-slate-500/20 active:scale-95 text-left flex items-center gap-3">
+                                <span class="text-2xl group-hover:scale-110 transition">🛡️</span>
+                                <div>
+                                    <div class="text-sm">Contra-Atacar</div>
+                                    <div class="text-[10px] font-normal text-slate-300 opacity-80">Reage ao erro inimigo</div>
+                                </div>
+                            </button>
+
+                            <button onclick="abrirModalHabilidades()" class="group relative bg-gradient-to-br from-purple-600 to-indigo-700 hover:from-purple-500 hover:to-indigo-600 text-white p-3.5 rounded-xl border border-purple-400/30 font-bold transition-all shadow-lg hover:shadow-purple-500/20 active:scale-95 text-left flex items-center gap-3">
+                                <span class="text-2xl group-hover:scale-110 transition">✨</span>
+                                <div>
+                                    <div class="text-sm">Habilidades</div>
+                                    <div class="text-[10px] font-normal text-purple-200 opacity-80">Feitiços e Golpes Especial</div>
+                                </div>
+                            </button>
+
+                            <button onclick="acaoDescansar()" class="group relative bg-gradient-to-br from-emerald-700 to-teal-800 hover:from-emerald-600 hover:to-teal-700 text-white p-3.5 rounded-xl border border-emerald-400/30 font-bold transition-all shadow-lg hover:shadow-emerald-500/20 active:scale-95 text-left flex items-center gap-3">
+                                <span class="text-2xl group-hover:scale-110 transition">💤</span>
+                                <div>
+                                    <div class="text-sm">Descansar</div>
+                                    <div class="text-[10px] font-normal text-emerald-200 opacity-80">Recupera +4 Energia</div>
+                                </div>
+                            </button>
+                        </div>
+
+                        <div class="text-[11px] text-slate-500 text-center border-t border-slate-800/80 pt-2">
+                            Turno automático do adversário após cada ação efetuada.
+                        </div>
                     </div>
+
+                    <div class="lg:col-span-6 bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur flex flex-col justify-between h-80">
+                        <div class="flex justify-between items-center mb-2 pb-2 border-b border-slate-800">
+                            <h3 class="text-xs uppercase font-bold tracking-wider text-slate-400 font-cinzel flex items-center gap-2">
+                                <span>📜</span> Log da Batalha
+                            </h3>
+                            <button onclick="limparLog()" class="text-[10px] text-slate-400 hover:text-slate-200 transition">Limpar</button>
+                        </div>
+                        
+                        <div id="combatLog" class="flex-1 overflow-y-auto space-y-1.5 pr-2 text-xs font-mono">
+                            <div class="text-slate-500 italic">[Sistema] Bem-vindo à masmorra! O combate começou.</div>
+                        </div>
+                    </div>
+
                 </div>
-
-            </div>
-
-        </main>
+            </main>
+        </div>
     </div>
+
+    <!-- MODAIS -->
 
     <div id="modalHabilidades" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="border border-purple-500/40 rounded-2xl max-w-4xl w-full p-6 shadow-2xl relative max-h-[90vh] flex flex-col bg-cover bg-top overflow-hidden" 
@@ -356,7 +363,6 @@
             </div>
         </div>
     </div>
-
     
     <div id="modalLoot" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-amber-500/50 rounded-2xl max-w-3xl w-full p-6 shadow-2xl text-center relative">
@@ -368,7 +374,6 @@
             </div>
         </div>
     </div>
-
     
     <div id="modalGameOver" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-red-600 rounded-2xl max-w-md w-full p-6 shadow-2xl text-center">
@@ -385,6 +390,7 @@
             <button onclick="abrirPlacar()" class="w-full mt-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl border border-slate-600 transition">Ver Placar GERAL</button>
         </div>
     </div>
+
     <div id="modalPlacar" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-amber-500/50 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative max-h-[80vh] flex flex-col">
             <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-800">
@@ -400,6 +406,7 @@
             </div>
         </div>
     </div>
+
     <div id="modalDetalhes" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-cyan-500/50 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
             <button onclick="document.getElementById('modalDetalhes').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
@@ -407,20 +414,23 @@
             <p id="detClasse" class="text-xs text-slate-400 uppercase font-bold mb-4 bg-slate-800 inline-block px-2 py-1 rounded">Classe</p>
             
             <div class="grid grid-cols-4 gap-2 mb-4 text-center text-[10px] sm:text-xs">
-                <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-rose-400 block">HP Max</span><b id="detHp">0</b></div>
-                <div class="bg-slate-95Vamos resolver cada um desses pontos para deixar o seu sistema perfeito.
-    
-    ### 1º Ocultar o jogo antes do login
-    Na imagem que você mandou, a tela de login está por cima do jogo rolando atrás. Para resolver isso, você precisa englobar toda a interface do jogo (status, ações, log, etc.) dentro de uma `div` e deixá-la oculta, assim como fizemos com a seleção de classes.
-    
-    **No HTML:**
-    Encontre onde começa a interface do jogo (logo após a tela de seleção de classe) e coloque tudo dentro de uma div com `id="telaJogo"` e `class="hidden"`:
-    ```html
-    <section id="telaJogo" class="hidden">
-        <!-- TODO O SEU HTML DO JOGO (Status, Ações, Log, Inimigo, etc) FICA AQUI DENTRO -->
-    </section>
+                <div class="bg-slate-950 p-1 rounded border border-slate-800"><span class="text-rose-400 block">HP</span><b id="detHp">0/0</b></div>
+                <div class="bg-slate-950 p-1 rounded border border-slate-800"><span class="text-yellow-400 block">Energia</span><b id="detEnergia">0/0</b></div>
+                <div class="bg-slate-950 p-1 rounded border border-slate-800"><span class="text-amber-400 block">Atk Base</span><b id="detAtk">0</b></div>
+                <div class="bg-slate-950 p-1 rounded border border-slate-800"><span class="text-orange-400 block">Dano</span><b id="detDano">0</b></div>
+                <div class="bg-slate-950 p-1 rounded border border-slate-800"><span class="text-blue-400 block">Defesa</span><b id="detDef">0</b></div>
+                <div class="bg-slate-950 p-1 rounded border border-slate-800"><span class="text-teal-400 block">RD</span><b id="detRd">0</b></div>
+                <div class="bg-slate-950 p-1 rounded border border-slate-800"><span class="text-purple-400 block">Dado</span><b id="detTipDan">d4</b></div>
+                <div class="bg-slate-950 p-1 rounded border border-slate-800"><span class="text-red-500 block">Crítico</span><b id="detCrit">20</b></div>
+            </div>
 
-    
+            <h3 class="text-xs text-slate-500 uppercase font-bold mb-2">Itens Coletados:</h3>
+            <div id="detItens" class="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+                <!-- Itens aparecerão aqui -->
+            </div>
+        </div>
+    </div>
+
     <script src="js/data.js"></script>
     <script src="js/game.js"></script>
 </body>
