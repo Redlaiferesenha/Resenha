@@ -689,7 +689,10 @@ function abrirModalLoot() {
 
 function aplicarItemLoot(item) {
     item.efeito(gameState.player);
-    gameState.player.itensInventario.push(item.nome);
+    gameState.player.itensInventario.push({ 
+    nome: item.nome, 
+    imagem: item.imagem
+    });
     logMsg(`🎁 Item Equipado: <b>${item.nome}</b> (${item.desc})`, 'system');
     document.getElementById('modalLoot').classList.add('hidden');
     atualizarTela();
@@ -890,16 +893,10 @@ function salvarPontuacao() {
     placar.push({
         user: currentUser,
         classe: gameState.player.classeNome,
-        rodada: gameState.mortosTotais, // A rodada é definida pelos inimigos mortos
-        stats: {
-            hpMax: gameState.player.vidamaxpla,
-            atk: gameState.player.atkpla,
-            def: gameState.player.defpla
-        },
-        itens: gameState.player.itensInventario || []
+        rodada: gameState.mortosTotais,
+        stats: gameState.player // Salva TODOS os status de uma vez
     });
 
-    // Ordena do maior pro menor (quem chegou mais longe)
     placar.sort((a, b) => b.rodada - a.rodada);
     localStorage.setItem('rpgPlacar', JSON.stringify(placar));
 }
