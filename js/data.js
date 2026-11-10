@@ -99,23 +99,6 @@ const LISTA_HABILIDADES = [
     { id: 8, nome: "8. Sangramento", icone: "🩸", custo: 8, desc: "Aplica sangramento por 7 rodadas (Ativa passiva do Vampiro!).", cor: "text-rose-400" }
 ];
 
-const CATALOGO_ITENS = [
-    { id: 1, nome: "Óculos de Aventureiro", desc: "+2 Bônus de Ataque", efeito: (p) => p.atkpla += 2 },
-    { id: 2, nome: "Colete à Prova de Balas", desc: "+2 Bônus de Defesa", efeito: (p) => p.defpla += 2 },
-    { id: 3, nome: "Dado Estranho", desc: "+1 no Lado do Dado de Dano", efeito: (p) => p.tipdan += 1 },
-    { id: 4, nome: "Pedra de Amolar", desc: "+2 Dano Adicional", efeito: (p) => p.danpla += 2 },
-    { id: 5, nome: "Laser de Mira", desc: "-1 na Margem do Crítico", efeito: (p) => p.critico -= 1 },
-    { id: 6, nome: "Faca de Arremesso", desc: "+3 Dano, -2 Bônus Ataque", efeito: (p) => { p.danpla += 3; p.atkpla -= 2; } },
-    { id: 7, nome: "Red Bull Vencido", desc: "+4 Energia Atual", efeito: (p) => p.energiaatual += 4 },
-    { id: 8, nome: "Bituca de Cigarro", desc: "+1 Dano do Feitiço Chamas", efeito: () => gameState.danchama += 1 },
-    { id: 9, nome: "Catuaba", desc: "+8 HP, +4 Max HP, -1 Atk", efeito: (p) => { p.vidamaxpla += 4; curarPlayer(8); p.atkpla -= 1; } },
-    { id: 10, nome: "Olho de Aranha", desc: "+1 Dano de Veneno", efeito: () => gameState.danven += 1 },
-    { id: 11, nome: "Analgésico", desc: "+1 Resistência a Dano (RD)", efeito: (p) => p.rd += 1 },
-    { id: 12, nome: "Máscara para Dormir", desc: "+1 Turno de Duração do Sono", efeito: () => gameState.rodormin += 1 },
-    { id: 13, nome: "Picolé do Amor", desc: "+1 Redução de Defesa em Gelos", efeito: () => gameState.redconge += 1 },
-    { id: 14, nome: "Labubu", desc: "+2 Atk, +2 Max Energia, -3 HP", efeito: (p) => { p.atkpla += 2; p.energiamax += 2; p.vidaatualpla -= 3; } },
-    { id: 15, nome: "Dente Falso de Vampiro", desc: "+1 Dano de Sangramento", efeito: () => gameState.dansang += 1 }
-];
 
 const BESTIARIO_INIMIGOS = [
     { nome: "Goblin", img: "imagens/imagensini/goblin.png", vidabase: 25, atkbase: 3, defbase: 10, danobase: 2 },
