@@ -1,3 +1,6 @@
+function formatarModificador(val) {
+    return val >= 0 ? `+${val}` : `${val}`;
+}
 const AudioSys = {
     ctx: null,
     init() {
@@ -696,9 +699,9 @@ function atualizarTela() {
     document.getElementById('txtPlayerEnergia').innerText = `${p.energiaatual} / ${p.energiamax}`;
     document.getElementById('barPlayerEnergia').style.width = `${Math.max(0, (p.energiaatual / p.energiamax) * 100)}%`;
 
-    document.getElementById('attrPlayerAtk').innerText = `+${p.atkpla}`;
-    document.getElementById('attrPlayerDano').innerText = `+${p.danpla}`;
-    document.getElementById('attrPlayerDef').innerText = p.defpla;
+    document.getElementById('attrPlayerAtk').innerText = formatarModificador(p.atkpla);
+    document.getElementById('attrPlayerDano').innerText = formatarModificador(p.danpla);
+    document.getElementById('attrPlayerDef').innerText = formatarModificador(p.defpla);
     document.getElementById('attrPlayerRD').innerText = p.rd;
     document.getElementById('attrPlayerDado').innerText = `1d${p.tipdan}`;
     document.getElementById('attrPlayerCrit').innerText = p.critico;
@@ -712,9 +715,9 @@ function atualizarTela() {
         document.getElementById('inimigoNome').innerText = boss.nome;
         document.getElementById('txtInimigoVida').innerText = `${boss.vidatual} / ${boss.vidamax}`;
         document.getElementById('barInimigoVida').style.width = `${Math.max(0, (boss.vidatual / boss.vidamax) * 100)}%`;
-        document.getElementById('attrInimigoDef').innerText = boss.defboss;
-        document.getElementById('attrInimigoAtk').innerText = `+${boss.atkboss}`;
-        document.getElementById('attrInimigoDano').innerText = `+${boss.danoss}`;
+        document.getElementById('attrInimigoAtk').innerText = formatarModificador(boss.atkboss);
+        document.getElementById('attrInimigoDano').innerText = formatarModificador(boss.danoss);
+        document.getElementById('attrInimigoDef').innerText = formatarModificador(boss.defboss);
         document.getElementById('attrInimigoDado').innerText = `1d${boss.tipdanboss}`;
         renderBadgesStatus(boss.status);
     } else {
@@ -725,9 +728,9 @@ function atualizarTela() {
         document.getElementById('inimigoNome').innerText = ini.nome;
         document.getElementById('txtInimigoVida').innerText = `${ini.vidatualini} / ${ini.vidamaxini}`;
         document.getElementById('barInimigoVida').style.width = `${Math.max(0, (ini.vidatualini / ini.vidamaxini) * 100)}%`;
-        document.getElementById('attrInimigoDef').innerText = ini.defini;
-        document.getElementById('attrInimigoAtk').innerText = `+${ini.atkini}`;
-        document.getElementById('attrInimigoDano').innerText = `+${ini.danini}`;
+        document.getElementById('attrInimigoAtk').innerText = formatarModificador(ini.atkini);
+        document.getElementById('attrInimigoDano').innerText = formatarModificador(ini.danini);
+        document.getElementById('attrInimigoDef').innerText = formatarModificador(ini.defini); // <---
         document.getElementById('attrInimigoDado').innerText = `1d${ini.tipdanini}`;
         renderBadgesStatus(ini.status);
     }
