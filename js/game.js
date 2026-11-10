@@ -337,6 +337,7 @@ function verificarVitoriaInimigo() {
                     defboss: bossModelo.defbase,
                     danoss: Math.floor(bossModelo.danobase * esc),
                     tipdanoboss: 2
+                    status: []
                 };
 
                 aplicarEfeitoAmbiente(gameState.ambienteAtual, gameState.player, gameState.inimigo, gameState.boss, true);
@@ -368,6 +369,7 @@ function spawnNovoInimigo() {
         defini: modelo.defbase,
         danini: Math.floor(modelo.danobase + (gameState.mortosTotais * 0.3)),
         tipdanini: 1
+        status: []
     };
 
     logMsg(`⚔️ Um <b>${gameState.inimigo.nome}</b> surge!`, 'enemy');
@@ -692,57 +694,83 @@ function atualizarTela() {
     const boss = gameState.boss;
     const isBoss = gameState.bossAtivo;
 
-    document.getElementById('txtProgAmbiente').innerText = `${gameState.inimigosParaAmbiente}/2`;
-    document.getElementById('txtAbates').innerText = gameState.mortosTotais;
-    document.getElementById('txtRodada').innerText = gameState.rodada;
+    // Helper para atualizar texto sem travar o código caso o ID não exista
+    const setTexto = (id, texto) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = texto;
+    };
 
-    document.getElementById('playerClasseBadge').innerText = p.classeNome;
-    document.getElementById('txtPlayerVida').innerText = `${p.vidaatualpla} / ${p.vidamaxpla}`;
-    document.getElementById('barPlayerVida').style.width = `${Math.max(0, (p.vidaatualpla / p.vidamaxpla) * 100)}%`;
+    setTexto('txtProgAmbiente', `${gameState.inimigosParaAmbiente}/2`);
+    setTexto('txtAbates', gameState.mortosTotais);
+    setTexto('txtRodada', gameState.rodada);
 
-    document.getElementById('txtPlayerEnergia').innerText = `${p.energiaatual} / ${p.energiamax}`;
-    document.getElementById('barPlayerEnergia').style.width = `${Math.max(0, (p.energiaatual / p.energiamax) * 100)}%`;
+    setTexto('playerClasseBadge', p.classeNome);
+    setTexto('txtPlayerVida', `${p.vidaatualpla} / ${p.vidamaxpla}`);
+    
+    const barPVida = document.getElementById('barPlayerVida');
+    if (barPVida) barPVida.style.width = `${Math.max(0, (p.vidaatualpla / p.vidamaxpla) * 100)}%`;
 
-    document.getElementById('attrPlayerAtk').innerText = formatarModificador(p.atkpla);
-    document.getElementById('attrPlayerDano').innerText = formatarModificador(p.danpla);
-    document.getElementById('attrPlayerDef').innerText = formatarModificador(p.defpla);
-    document.getElementById('attrPlayerRD').innerText = p.rd;
-    document.getElementById('attrPlayerDado').innerText = `1d${p.tipdan}`;
-    document.getElementById('attrPlayerCrit').innerText = p.critico;
+    setTexto('txtPlayerEnergia', `${p.energiaatual} / ${p.energiamax}`);
+    const barPEnergia = document.getElementById('barPlayerEnergia');
+    if (barPEnergia) barPEnergia.style.width = `${Math.max(0, (p.energiaatual / p.energiamax) * 100)}%`;
+
+    setTexto('attrPlayerAtk', formatarModificador(p.atkpla));
+    setTexto('attrPlayerDano', formatarModificador(p.danpla));
+    setTexto('attrPlayerDef', formatarModificador(p.defpla));
+    setTexto('attrPlayerRD', p.rd);
+    setTexto('attrPlayerDado', `1d${p.tipdan}`);
+    setTexto('attrPlayerCrit', p.critico);
 
     const cardInimigo = document.getElementById('cardInimigoContainer');
-    if (isBoss) {
-        cardInimigo.className = "bg-slate-900/95 border-2 border-red-500/80 rounded-2xl p-4 shadow-2xl backdrop-blur relative overflow-hidden glow-red";
-        document.getElementById('inimigoTipoBadge').innerText = "BOSS";
-        document.getElementById('inimigoTipoBadge').className = "text-[10px] uppercase font-bold bg-red-600 text-white px-2 py-0.5 rounded";
-        document.getElementById('inimigoAvatar').innerText = "🐲";
-        document.getElementById('inimigoNome').innerText = boss.nome;
-        document.getElementById('txtInimigoVida').innerText = `${boss.vidatual} / ${boss.vidamax}`;
-        document.getElementById('barInimigoVida').style.width = `${Math.max(0, (boss.vidatual / boss.vidamax) * 100)}%`;
-        document.getElementById('attrInimigoAtk').innerText = formatarModificador(boss.atkboss);
-        document.getElementById('attrInimigoDano').innerText = formatarModificador(boss.danoss);
-        document.getElementById('attrInimigoDef').innerText = formatarModificador(boss.defboss);
-        document.getElementById('attrInimigoDado').innerText = `1d${boss.tipdanboss}`;
-        renderBadgesStatus(boss.status);
-    } else {
-        cardInimigo.className = "bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur relative overflow-hidden";
-        document.getElementById('inimigoTipoBadge').innerText = "Inimigo";
-        document.getElementById('inimigoTipoBadge').className = "text-[10px] uppercase font-bold bg-red-500/20 text-red-400 border border-red-500/40 px-2 py-0.5 rounded";
-        document.getElementById('inimigoAvatar').innerText = "👺";
-        document.getElementById('inimigoNome').innerText = ini.nome;
-        document.getElementById('txtInimigoVida').innerText = `${ini.vidatualini} / ${ini.vidamaxini}`;
-        document.getElementById('barInimigoVida').style.width = `${Math.max(0, (ini.vidatualini / ini.vidamaxini) * 100)}%`;
-        document.getElementById('attrInimigoAtk').innerText = formatarModificador(ini.atkini);
-        document.getElementById('attrInimigoDano').innerText = formatarModificador(ini.danini);
-        document.getElementById('attrInimigoDef').innerText = formatarModificador(ini.defini); // <---
-        document.getElementById('attrInimigoDado').innerText = `1d${ini.tipdanini}`;
-        renderBadgesStatus(ini.status);
-    }
-const oponente = gameState.bossAtivo ? gameState.boss : gameState.inimigo;
-const imgElement = document.getElementById('inimigoAvatarImg');
 
-    if (imgElement && oponente.imagem) {
-        imgElement.src = oponente.imagem;
+    if (isBoss) {
+        if (cardInimigo) cardInimigo.className = "bg-slate-900/95 border-2 border-red-500/80 rounded-2xl p-4 shadow-2xl backdrop-blur relative overflow-hidden glow-red";
+        
+        setTexto('inimigoTipoBadge', "BOSS");
+        const badge = document.getElementById('inimigoTipoBadge');
+        if (badge) badge.className = "text-[10px] uppercase font-bold bg-red-600 text-white px-2 py-0.5 rounded";
+
+        setTexto('inimigoNome', boss.nome);
+        setTexto('txtInimigoVida', `${boss.vidatual} / ${boss.vidamax}`);
+        
+        const barIVida = document.getElementById('barInimigoVida');
+        if (barIVida) barIVida.style.width = `${Math.max(0, (boss.vidatual / boss.vidamax) * 100)}%`;
+
+        setTexto('attrInimigoAtk', formatarModificador(boss.atkboss));
+        setTexto('attrInimigoDano', formatarModificador(boss.danoss));
+        setTexto('attrInimigoDef', formatarModificador(boss.defboss));
+        setTexto('attrInimigoDado', `1d${boss.tipdanboss}`);
+        
+        if (typeof renderBadgesStatus === 'function') renderBadgesStatus(boss.status || []);
+    } else {
+        if (cardInimigo) cardInimigo.className = "bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur relative overflow-hidden";
+        
+        setTexto('inimigoTipoBadge', "Inimigo");
+        const badge = document.getElementById('inimigoTipoBadge');
+        if (badge) badge.className = "text-[10px] uppercase font-bold bg-red-500/20 text-red-400 border border-red-500/40 px-2 py-0.5 rounded";
+
+        setTexto('inimigoNome', ini.nome);
+        setTexto('txtInimigoVida', `${ini.vidatualini} / ${ini.vidamaxini}`);
+        
+        const barIVida = document.getElementById('barInimigoVida');
+        if (barIVida) barIVida.style.width = `${Math.max(0, (ini.vidatualini / ini.vidamaxini) * 100)}%`;
+
+        setTexto('attrInimigoAtk', formatarModificador(ini.atkini));
+        setTexto('attrInimigoDano', formatarModificador(ini.danini));
+        setTexto('attrInimigoDef', formatarModificador(ini.defini));
+        setTexto('attrInimigoDado', `1d${ini.tipdanini}`);
+        
+        if (typeof renderBadgesStatus === 'function') renderBadgesStatus(ini.status || []);
+    }
+
+    // Atualização da Imagem
+    const oponente = isBoss ? boss : ini;
+    const imgElement = document.getElementById('inimigoAvatarImg') || document.getElementById('inimigoAvatar');
+
+    if (imgElement && oponente && oponente.imagem) {
+        if (imgElement.tagName === 'IMG') {
+            imgElement.src = oponente.imagem;
+        }
     }
 }
 
