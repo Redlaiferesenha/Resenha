@@ -126,8 +126,8 @@ function selecionarClasse(op) {
             gameState.player = { classeNome: "Assassino", classeId: 3, vidamaxpla: 20, vidaatualpla: 20, atkpla: 4, danpla: 3, defpla: 14, tipdan: 4, critico: 20, energiamax: 14, energiaatual: 14, rd: 0 };
             break;
         case 4:
-            gameState.player = { classeNome: "Energético", classeId: 4, vidamaxpla: 20, vidaatualpla: 20, atkpla: 3, danpla: 2, defpla: 12, tipdan: 4, critico: 20, energiamax: 17, energiaatual: 17, rd: 0 };
-            gameState.danchama += 1;
+            gameState.player = { classeNome: "Energético", classeId: 4, vidamaxpla: 20, vidaatualpla: 20, atkpla: 3, danpla: 2, defpla: 12, tipdan: 4, critico: 20, energiamax: 170, energiaatual: 170, rd: 0 };
+            gameState.danchama += 1000;
             gameState.redconge += 1;
             gameState.danven += 1;
             gameState.rodormin += 1;
@@ -692,21 +692,49 @@ function aplicarItemLoot(item) {
 }
 
 function dropItemBoss() {
-    let val = Math.floor(Math.random() * 2) + 1;
-    const p = gameState.player;
-    if (val === 1) {
-        logMsg(`👑 Drop do Boss: <img src="imagens/imagensitem/mascaralobo.png" class="inline-block w-6 h-6 rounded mx-1 align-middle"> <b>Máscara de Lobo!</b> (+4 Max HP, +4 Atk, -2 Defesa)`, 'crit');
-        p.vidamaxpla += 4;
-        curarPlayer(4);
-        p.atkpla += 4;
-        p.defpla -= 2;
-    } else {
-        logMsg(`👑 Drop do Boss: <img src="imagens/imagensitem/livroendiabrado.png" class="inline-block w-6 h-6 rounded mx-1 align-middle"> <b>Livro Endiabrado!</b> (+3 Atk, +3 Dano, Perde 25% HP)`, 'crit');
-        p.atkpla += 3;
-        p.danpla += 3;
-        p.vidaatualpla = Math.floor(p.vidaatualpla * 0.75);
-    }
-    atualizarTela();
+    const container = document.getElementById('cardsLootContainer');
+    container.innerHTML = '';
+    const bossItens = [
+        {
+            nome: "Máscara de Lobo",
+            img: "imagens/imagensitem/mascaralobo.png",
+            desc: "+4 Max HP, +4 Atk, -2 Defesa",
+            efeito: (p) => { p.vidamaxpla += 4; curarPlayer(4); p.atkpla += 4; p.defpla -= 2; }
+        },
+        {
+            nome: "Livro Endiabrado",
+            img: "imagens/imagensitem/livroendiabrado.png",
+            desc: "+3 Atk, +3 Dano, Perde 25% HP",
+            efeito: (p) => { p.atkpla += 3; p.danpla += 3; p.vidaatualpla = Math.floor(p.vidaatualpla * 0.75); }
+        }
+    ];
+
+    
+    bossItens.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "bg-slate-950 border border-red-800 hover:border-red-500 p-4 rounded-xl cursor-pointer transition flex flex-col justify-between group text-center shadow-lg hover:shadow-red-500/20";
+        
+        
+        card.onclick = () => {
+            item.efeito(gameState.player);
+            logMsg(`👑 Drop do Boss Equipado: <b>${item.nome}</b> (${item.desc})`, 'crit');
+            document.getElementById('modalLoot').classList.add('hidden');
+            atualizarTela();
+        };
+
+        card.innerHTML = `
+            <div>
+                <img src="${item.img}" class="w-16 h-16 object-cover rounded-xl mx-auto mb-3 border-2 border-red-500/50 group-hover:scale-105 transition bg-slate-900 shadow-md" alt="${item.nome}">
+                <h4 class="font-bold text-red-400 text-sm mb-1">${item.nome}</h4>
+                <p class="text-xs text-slate-400">${item.desc}</p>
+            </div>
+            <button class="mt-4 py-1.5 bg-red-500/20 text-red-300 font-bold text-xs rounded border border-red-500/40 group-hover:bg-red-500 group-hover:text-white transition">Equipar Boss Drop</button>
+        `;
+        container.appendChild(card);
+    });
+
+    
+    document.getElementById('modalLoot').classList.remove('hidden');
 }
 
 function reiniciarJogo() { location.reload(); }
