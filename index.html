@@ -38,7 +38,18 @@
                 </div>
             </div>
         </header>
-
+        <section id="telaLogin" class="my-auto py-8 max-w-sm mx-auto w-full bg-slate-900/90 border border-slate-700 p-6 rounded-2xl shadow-2xl backdrop-blur text-center">
+            <h1 class="text-3xl font-black text-amber-400 font-cinzel mb-2">LOGIN</h1>
+            <p class="text-xs text-slate-400 mb-6">Crie uma conta ou faça login para jogar.</p>
+            
+            <input type="text" id="inputUser" placeholder="Nome de Usuário" class="w-full mb-3 p-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-200 outline-none focus:border-amber-500">
+            <input type="password" id="inputPass" placeholder="Senha" class="w-full mb-6 p-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-200 outline-none focus:border-amber-500">
+            
+            <div class="flex gap-3">
+                <button onclick="logar()" class="flex-1 py-3 bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 font-bold rounded-xl border border-amber-500/40 transition">Entrar</button>
+                <button onclick="registrar()" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl border border-slate-600 transition">Criar Conta</button>
+            </div>
+        </section>
         <section id="telaSelecaoClasse" class="my-auto py-8">
             <div class="text-center mb-8">
                 <h1 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-300 to-amber-500 tracking-wide uppercase mb-2">
@@ -369,6 +380,40 @@
             </div>
 
             <button onclick="reiniciarJogo()" class="w-full py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl shadow-lg transition">Jogar Novamente</button>
+            <button onclick="abrirPlacar()" class="w-full mt-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl border border-slate-600 transition">Ver Placar GERAL</button>
+        </div>
+    </div>
+    <div id="modalPlacar" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-amber-500/50 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative max-h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-800">
+                <h2 class="text-2xl font-black text-amber-400 font-cinzel">🏆 PLACAR GERAL</h2>
+                <button onclick="fecharPlacar()" class="text-slate-400 hover:text-white text-xl">✕</button>
+            </div>
+            <div class="text-xs text-slate-400 flex justify-between px-3 mb-2 font-bold uppercase">
+                <span>Jogador</span>
+                <span>Rodada Final</span>
+            </div>
+            <div id="listaPlacar" class="overflow-y-auto space-y-2 flex-1">
+                <!-- Itens do placar entrarão aqui -->
+            </div>
+        </div>
+    </div>
+    <div id="modalDetalhes" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-cyan-500/50 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="document.getElementById('modalDetalhes').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
+            <h2 id="detNome" class="text-2xl font-black text-cyan-400 font-cinzel mb-1">Nome</h2>
+            <p id="detClasse" class="text-xs text-slate-400 uppercase font-bold mb-4 bg-slate-800 inline-block px-2 py-1 rounded">Classe</p>
+            
+            <div class="grid grid-cols-3 gap-2 mb-4 text-center text-xs">
+                <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-rose-400 block">HP Max</span><b id="detHp">0</b></div>
+                <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-amber-400 block">Ataque</span><b id="detAtk">0</b></div>
+                <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-blue-400 block">Defesa</span><b id="detDef">0</b></div>
+            </div>
+    
+            <h3 class="text-xs text-slate-500 uppercase font-bold mb-2">Itens Coletados:</h3>
+            <div id="detItens" class="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+                <!-- Itens aparecerão aqui -->
+            </div>
         </div>
     </div>
 
