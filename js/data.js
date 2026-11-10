@@ -6,6 +6,7 @@ const CLASS_IMAGES = {
     arqueiro: "imagens/imagensperso/arqueirpo.png",   
     vampiro: "imagens/imagensperso/vampiro.jpg"
 };
+
 const AMBIENTE_IMAGES = {
     0: "imagens/imagensfundo/neutro.png",
     1: "imagens/imagensfundo/floresta.png",
@@ -13,6 +14,7 @@ const AMBIENTE_IMAGES = {
     3: "imagens/imagensfundo/pantano.png",
     4: "imagens/imagensfundo/vulcao.png"
 };
+
 const CATALOGO_ITENS = [
     { id: 1, nome: "Óculos de Aventureiro", img: "imagens/imagensitem/oculosaventureiro.png", desc: "+2 Bônus de Ataque", efeito: (p) => p.atkpla += 2 },
     { id: 2, nome: "Colete à Prova de Balas", img: "imagens/imagensitem/colete.jpg", desc: "+2 Bônus de Defesa", efeito: (p) => p.defpla += 2 },
@@ -36,10 +38,9 @@ let gameState = {
     mortosNormais: 0,
     mortosTotais: 0,
     inimigosParaAmbiente: 0,
-    ambienteAtual: 0, // 0: Neutro, 1: Floresta, 2: Glacial, 3: Pantano, 4: Vulcao
+    ambienteAtual: 0, 
     bossAtivo: false,
-    tipoContraAtaque: 0, // 0: Nenhum, 1: Normal, 2: Especial (Duplo)
-    
+    tipoContraAtaque: 0, 
     
     danchama: 2,
     redconge: 2,
@@ -48,7 +49,6 @@ let gameState = {
     rodormin: 4,
     vampiroPassiva: false,
 
-    
     player: {
         classeNome: "Neutro",
         classeId: 1,
@@ -98,7 +98,6 @@ const LISTA_HABILIDADES = [
     { id: 7, nome: "7. Sono", icone: "💤", custo: 10, desc: "Faz o inimigo dormir por rodadas aleatórias (impede ataques).", cor: "text-indigo-400" },
     { id: 8, nome: "8. Sangramento", icone: "🩸", custo: 8, desc: "Aplica sangramento por 7 rodadas (Ativa passiva do Vampiro!).", cor: "text-rose-400" }
 ];
-
 
 const BESTIARIO_INIMIGOS = [
     { nome: "Goblin", img: "imagens/imagensini/goblin.png", vidabase: 25, atkbase: 3, defbase: 10, danobase: 2 },
