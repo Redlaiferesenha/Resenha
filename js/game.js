@@ -1,0 +1,766 @@
+// AUDIO SYNTHESIZER (NATIVO WEB AUDIO API)
+const AudioSys = {
+    ctx: null,
+    init() {
+        if (!this.ctx) {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    },
+    playHit() {
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.15);
+    },
+    playSpell() {
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.25);
+        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.25);
+    },
+    playCrit() {
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.4, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.3);
+    }
+};
+
+// EFEITO DE PARTÍCULAS CANVAS POR AMBIENTE
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+class Particle {
+    constructor() { this.reset(); }
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = (Math.random() - 0.5) * 0.5;
+        this.speedY = Math.random() * 0.8 + 0.2;
+        this.alpha = Math.random() * 0.5 + 0.2;
+    }
+    update() {
+        this.x += this.speedX;
+        this.y -= this.speedY;
+        if (this.y < 0 || this.x < 0 || this.x > canvas.width) {
+            this.reset();
+            this.y = canvas.height;
+        }
+    }
+    draw() {
+        let color = "rgba(245, 158, 11, "; // Vulcão (laranja)
+        if (gameState.ambienteAtual === 1) color = "rgba(34, 197, 94, "; // Floresta (verde)
+        if (gameState.ambienteAtual === 2) color = "rgba(56, 189, 248, "; // Glacial (azul)
+        if (gameState.ambienteAtual === 3) color = "rgba(163, 230, 53, "; // Pantano (lima/toxico)
+        if (gameState.ambienteAtual === 0) color = "rgba(148, 163, 184, "; // Neutro (cinza)
+
+        ctx.fillStyle = color + this.alpha + ")";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+for (let i = 0; i < 45; i++) particles.push(new Particle());
+
+function animateBg() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animateBg);
+}
+animateBg();
+
+// INICIALIZAÇÃO DE IMAGENS
+window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('img-neutro').src = CLASS_IMAGES.neutro;
+    document.getElementById('img-defensor').src = CLASS_IMAGES.defensor;
+    document.getElementById('img-assassino').src = CLASS_IMAGES.assassino;
+    document.getElementById('img-energetico').src = CLASS_IMAGES.energetico;
+    document.getElementById('img-arqueiro').src = CLASS_IMAGES.arqueiro;
+    document.getElementById('img-vampiro').src = CLASS_IMAGES.vampiro;
+});
+
+// INICIALIZADOR DE CLASSE
+function selecionarClasse(op) {
+    gameState.player.classeId = op;
+    switch(op) {
+        case 1:
+            gameState.player = { classeNome: "Neutro", classeId: 1, vidamaxpla: 30, vidaatualpla: 30, atkpla: 3, danpla: 2, defpla: 14, tipdan: 4, critico: 20, energiamax: 12, energiaatual: 12, rd: 0 };
+            break;
+        case 2:
+            gameState.player = { classeNome: "Defensor", classeId: 2, vidamaxpla: 35, vidaatualpla: 35, atkpla: 2, danpla: 2, defpla: 16, tipdan: 4, critico: 20, energiamax: 12, energiaatual: 12, rd: 2 };
+            break;
+        case 3:
+            gameState.player = { classeNome: "Assassino", classeId: 3, vidamaxpla: 20, vidaatualpla: 20, atkpla: 4, danpla: 3, defpla: 14, tipdan: 4, critico: 20, energiamax: 14, energiaatual: 14, rd: 0 };
+            break;
+        case 4:
+            gameState.player = { classeNome: "Energético", classeId: 4, vidamaxpla: 20, vidaatualpla: 20, atkpla: 3, danpla: 2, defpla: 12, tipdan: 4, critico: 20, energiamax: 17, energiaatual: 17, rd: 0 };
+            gameState.danchama += 1;
+            gameState.redconge += 1;
+            gameState.danven += 1;
+            gameState.rodormin += 1;
+            gameState.dansang += 1;
+            break;
+        case 5:
+            gameState.player = { classeNome: "Arqueiro", classeId: 5, vidamaxpla: 20, vidaatualpla: 20, atkpla: 3, danpla: 4, defpla: 16, tipdan: 6, critico: 20, energiamax: 12, energiaatual: 12, rd: 0 };
+            gameState.danchama += 1;
+            gameState.redconge += 1;
+            gameState.danven += 1;
+            break;
+        case 6:
+            gameState.player = { classeNome: "Vampiro", classeId: 6, vidamaxpla: 30, vidaatualpla: 30, atkpla: 3, danpla: 2, defpla: 14, tipdan: 4, critico: 20, energiamax: 16, energiaatual: 16, rd: 0 };
+            gameState.vampiroPassiva = true;
+            break;
+    }
+
+    document.getElementById('telaSelecaoClasse').classList.add('hidden');
+    document.getElementById('telaCombate').classList.remove('hidden');
+    document.getElementById('headerAmbiente').classList.remove('hidden');
+
+    const imgKeyMap = { 1: 'neutro', 2: 'defensor', 3: 'assassino', 4: 'energetico', 5: 'arqueiro', 6: 'vampiro' };
+    document.getElementById('playerAvatarImg').src = CLASS_IMAGES[imgKeyMap[op]];
+
+    logMsg(`Você entrou na masmorra como <b class="text-amber-400">${gameState.player.classeNome}</b>!`, 'system');
+    
+    gerarNovoAmbiente();
+    atualizarTela();
+}
+
+// LOG DE BATALLA
+function logMsg(msg, tipo = 'normal') {
+    const logContainer = document.getElementById('combatLog');
+    const div = document.createElement('div');
+    
+    let color = "text-slate-300";
+    if (tipo === 'system') color = "text-amber-400 font-bold";
+    if (tipo === 'player') color = "text-emerald-400";
+    if (tipo === 'enemy') color = "text-rose-400";
+    if (tipo === 'crit') color = "text-yellow-300 font-bold glow-amber";
+    if (tipo === 'spell') color = "text-purple-300";
+    if (tipo === 'status') color = "text-cyan-300";
+
+    div.className = `${color} leading-relaxed`;
+    div.innerHTML = `<span class="text-slate-500 text-[10px]">[R${gameState.rodada}]</span> ${msg}`;
+    logContainer.appendChild(div);
+    logContainer.scrollTop = logContainer.scrollHeight;
+}
+
+function limparLog() {
+    document.getElementById('combatLog').innerHTML = '';
+}
+
+// AMBIENTES E SEUS EFEITOS
+function aplicarEfeitoAmbiente(amb, player, ini, boss, isBoss) {
+    const target = isBoss ? boss : ini;
+    switch(amb) {
+        case 1: // Floresta
+            player.defpla += 2;
+            if(isBoss) target.atkboss -= 2; else target.atkini -= 2;
+            break;
+        case 2: // Glacial
+            player.energiamax -= 2;
+            if (player.energiaatual > player.energiamax) player.energiaatual = player.energiamax;
+            if(isBoss) target.defboss -= 2; else target.defini -= 2;
+            gameState.redconge += 1;
+            break;
+        case 3: // Pantano
+            player.atkpla -= 2;
+            if(isBoss) { target.atkboss -= 2; target.defboss += 1; } 
+            else { target.atkini -= 2; target.defini += 1; }
+            break;
+        case 4: // Vulcao
+            player.atkpla += 3;
+            if(isBoss) target.atkboss += 3; else target.atkini += 3;
+            gameState.danchama += 2;
+            break;
+    }
+}
+
+function removerEfeitoAmbiente(amb, player, ini, boss, isBoss) {
+    const target = isBoss ? boss : ini;
+    switch(amb) {
+        case 1:
+            player.defpla -= 2;
+            if(isBoss) target.atkboss += 2; else target.atkini += 2;
+            break;
+        case 2:
+            player.energiamax += 2;
+            if(isBoss) target.defboss += 2; else target.defini += 2;
+            gameState.redconge -= 1;
+            break;
+        case 3:
+            player.atkpla += 2;
+            if(isBoss) { target.atkboss += 2; target.defboss -= 1; } 
+            else { target.atkini += 2; target.defini -= 1; }
+            break;
+        case 4:
+            player.atkpla -= 3;
+            if(isBoss) target.atkboss -= 3; else target.atkini -= 3;
+            gameState.danchama -= 2;
+            break;
+    }
+}
+
+function gerarNovoAmbiente() {
+    const ambAnterior = gameState.ambienteAtual;
+    let novoAmb;
+    do { novoAmb = Math.floor(Math.random() * 5); } while (novoAmb === ambAnterior);
+
+    removerEfeitoAmbiente(ambAnterior, gameState.player, gameState.inimigo, gameState.boss, gameState.bossAtivo);
+    gameState.ambienteAtual = novoAmb;
+    aplicarEfeitoAmbiente(novoAmb, gameState.player, gameState.inimigo, gameState.boss, gameState.bossAtivo);
+
+    const nomes = ["Neutro", "Floresta 🌲", "Glacial ❄️", "Pântano ☣️", "Vulcão 🔥"];
+    const descs = [
+        "Nenhum efeito alterado neste ambiente.",
+        "+2 Defesa para Player e -2 Ataque para Inimigos.",
+        "-2 Energia Máx Player, -2 Defesa Inimigo, +1 Efeito Congelamento.",
+        "-2 Ataque para ambos, +1 Defesa para Inimigos.",
+        "+3 Ataque para ambos, +2 Dano de Chamas."
+    ];
+    const icones = ["🏛️", "🌲", "❄️", "☣️", "🔥"];
+
+    document.getElementById('ambienteNome').innerText = `Ambiente: ${nomes[novoAmb]}`;
+    document.getElementById('ambienteDesc').innerText = descs[novoAmb];
+    document.getElementById('ambienteIcone').innerText = icones[novoAmb];
+    logMsg(`🌎 <b>O AMBIENTE MUDOU:</b> ${nomes[novoAmb]} - ${descs[novoAmb]}`, 'system');
+}
+
+// LOGICA GERAL E STATUS
+function curarPlayer(valor) {
+    gameState.player.vidaatualpla += valor;
+    if (gameState.player.vidaatualpla > gameState.player.vidamaxpla) {
+        gameState.player.vidaatualpla = gameState.player.vidamaxpla;
+    }
+}
+
+function temStatus(statusArray, tipo) {
+    return statusArray.some(s => s.tipo === tipo);
+}
+
+function processarStatus(target) {
+    if (!target.status) return;
+
+    for (let i = target.status.length - 1; i >= 0; i--) {
+        let s = target.status[i];
+
+        // LOGICA DE DANO COM O BUG CORRIGIDO PARA ATACAR BOSS OU INIMIGO COMUM
+        if (s.tipo === 'Chamas' || s.tipo === 'Envenenado' || s.tipo === 'Sangramento') {
+            if (target.vidatualini !== undefined) {
+                target.vidatualini -= s.danoPorRodada;
+                if (target.vidatualini < 0) target.vidatualini = 0;
+            } else {
+                target.vidatual -= s.danoPorRodada;
+                if (target.vidatual < 0) target.vidatual = 0;
+            }
+            logMsg(`🔥 [Efeito Status] ${target.nome} sofreu ${s.danoPorRodada} de dano por ${s.tipo}!`, 'status');
+        }
+
+        if (s.duracao > 0) s.duracao--;
+
+        if (s.duracao === 0) {
+            if (gameState.bossAtivo) gameState.boss.defboss += s.reducaoDef;
+            else gameState.inimigo.defini += s.reducaoDef;
+            
+            logMsg(`✨ O efeito de <b>${s.tipo}</b> em ${target.nome} expirou.`, 'system');
+            target.status.splice(i, 1);
+        }
+    }
+}
+
+function limparStatus(target, isBoss) {
+    if (!target.status) return;
+    target.status.forEach(s => {
+        if(isBoss) gameState.boss.defboss += s.reducaoDef;
+        else gameState.inimigo.defini += s.reducaoDef;
+    });
+    target.status = [];
+}
+
+function verificarVitoriaInimigo() {
+    if (!gameState.bossAtivo && gameState.inimigo.vidatualini <= 0) {
+        logMsg(`💀 <b>${gameState.inimigo.nome} foi derrotado!</b>`, 'system');
+        limparStatus(gameState.inimigo, false);
+        gameState.mortosNormais++;
+        gameState.mortosTotais++;
+        
+        logMsg(`✨ Você recuperou +7 de vida pela vitória!`, 'player');
+        curarPlayer(7);
+        abrirModalLoot();
+
+        gameState.inimigosParaAmbiente++;
+        if (gameState.inimigosParaAmbiente === 2) {
+            gerarNovoAmbiente();
+            gameState.inimigosParaAmbiente = 0;
+        }
+
+        if (gameState.mortosTotais % 5 === 0) {
+            gameState.bossAtivo = true;
+            gameState.boss.vidatual = gameState.boss.vidamax;
+            aplicarEfeitoAmbiente(gameState.ambienteAtual, gameState.player, gameState.inimigo, gameState.boss, true);
+            logMsg(`⚠️ <b>UM BOSS PODEROSO APARECEU!</b>`, 'crit');
+        } else {
+            spawnNovoInimigo();
+        }
+        return true;
+    }
+
+    if (gameState.bossAtivo && gameState.boss.vidatual <= 0) {
+        logMsg(`👑 <b>O BOSS FOI DERROTADO!</b>`, 'crit');
+        limparStatus(gameState.boss, true);
+        removerEfeitoAmbiente(gameState.ambienteAtual, gameState.player, gameState.inimigo, gameState.boss, true);
+        gameState.mortosTotais++;
+        
+        logMsg(`✨ Recompensa de Boss: +14 de Vida e +5 de Energia Máxima!`, 'player');
+        curarPlayer(14);
+        gameState.player.energiamax += 5;
+        
+        dropItemBoss();
+        gameState.bossAtivo = false;
+        spawnNovoInimigo();
+        return true;
+    }
+    return false;
+}
+
+function spawnNovoInimigo() {
+    gameState.inimigo.vidamaxini += Math.floor(gameState.inimigo.vidamaxini * 0.15);
+    gameState.inimigo.vidatualini = gameState.inimigo.vidamaxini;
+
+    if (gameState.mortosNormais === 2) {
+        gameState.inimigo.atkini += 2;
+        gameState.inimigo.defini += 1;
+        gameState.inimigo.danini += 1;
+        gameState.inimigo.tipdanini += 1;
+        gameState.mortosNormais = 0;
+    }
+    gameState.inimigo.nome = `Goblin Nível ${gameState.mortosTotais + 1}`;
+    logMsg(`⚔️ Um novo <b>${gameState.inimigo.nome}</b> surge!`, 'enemy');
+}
+
+// AÇÕES DO PLAYER
+function acaoAtacar() {
+    AudioSys.playHit();
+    const p = gameState.player;
+    const targetDef = gameState.bossAtivo ? gameState.boss.defboss : gameState.inimigo.defini;
+    const targetStatus = gameState.bossAtivo ? gameState.boss.status : gameState.inimigo.status;
+    
+    let vampiroAtivo = gameState.vampiroPassiva && temStatus(targetStatus, 'Sangramento');
+    let d20 = Math.floor(Math.random() * 20) + 1;
+    let teste = d20 + p.atkpla + (vampiroAtivo ? 2 : 0);
+
+    if (teste >= targetDef) {
+        let dano = Math.floor(Math.random() * p.tipdan) + 1 + p.danpla + (vampiroAtivo ? 2 : 0);
+        let isCrit = d20 >= p.critico;
+        if (isCrit) {
+            dano *= 2;
+            AudioSys.playCrit();
+            logMsg(`🎯 <b>ACERTO CRÍTICO!</b> (d20: ${d20} + Atk: ${p.atkpla} vs DEF: ${targetDef})`, 'crit');
+        }
+
+        logMsg(`⚔️ Você atacou e causou <b>${dano}</b> de dano! (Teste: ${teste} vs DEF: ${targetDef})`, 'player');
+        
+        if (gameState.bossAtivo) gameState.boss.vidatual -= dano;
+        else gameState.inimigo.vidatualini -= dano;
+
+        if (vampiroAtivo) {
+            let cura = Math.floor(dano / 2);
+            curarPlayer(cura);
+            logMsg(`🩸 Passiva Vampiro: Curou +${cura} de HP!`, 'player');
+        }
+    } else {
+        logMsg(`❌ Você errou o ataque! (Rolou d20: ${d20} + ${p.atkpla} = ${teste} vs DEF: ${targetDef})`, 'normal');
+    }
+
+    if (!verificarVitoriaInimigo()) finalizarTurnoPlayer();
+}
+
+function acaoContraAtacar() {
+    logMsg(`🛡️ Você assumiu Postura de Contra-Ataque! Aguardando o ataque inimigo...`, 'player');
+    gameState.tipoContraAtaque = 1;
+    finalizarTurnoPlayer();
+}
+
+function acaoDescansar() {
+    const p = gameState.player;
+    p.energiaatual += 4;
+    if (p.energiaatual > p.energiamax) p.energiaatual = p.energiamax;
+    logMsg(`💤 Você descansou e recuperou +4 de Energia! (${p.energiaatual}/${p.energiamax})`, 'player');
+    finalizarTurnoPlayer();
+}
+
+function executarContraAtaque(vezes = 1) {
+    const p = gameState.player;
+    const targetDef = gameState.bossAtivo ? gameState.boss.defboss : gameState.inimigo.defini;
+    const targetStatus = gameState.bossAtivo ? gameState.boss.status : gameState.inimigo.status;
+
+    for (let i = 0; i < vezes; i++) {
+        const vidaAtualTarget = gameState.bossAtivo ? gameState.boss.vidatual : gameState.inimigo.vidatualini;
+        if (vidaAtualTarget <= 0) break;
+
+        let vampiroAtivo = gameState.vampiroPassiva && temStatus(targetStatus, 'Sangramento');
+        let d20 = Math.floor(Math.random() * 20) + 1;
+        let teste = d20 + p.atkpla + (vampiroAtivo ? 2 : 0);
+
+        if (teste >= targetDef) {
+            let dano = Math.floor(Math.random() * p.tipdan) + 1 + (p.danpla * 2) + (vampiroAtivo ? 2 : 0);
+            if (d20 >= p.critico) {
+                dano *= 2;
+                logMsg(`💥 <b>CRÍTICO NO CONTRA-ATAQUE!</b>`, 'crit');
+            }
+            logMsg(`⚡ <b>CONTRA-ATAQUE SUCEDIDO!</b> Causou ${dano} de dano!`, 'player');
+            
+            if (gameState.bossAtivo) {
+                gameState.boss.vidatual -= dano;
+                if (gameState.boss.vidatual < 0) gameState.boss.vidatual = 0;
+            } else {
+                gameState.inimigo.vidatualini -= dano;
+                if (gameState.inimigo.vidatualini < 0) gameState.inimigo.vidatualini = 0;
+            }
+
+            if (vampiroAtivo) {
+                let cura = Math.floor(dano / 2);
+                curarPlayer(cura);
+                logMsg(`🩸 Passiva Vampiro: Curou +${cura} HP!`, 'player');
+            }
+        } else {
+            logMsg(`❌ O seu Contra-Ataque falhou. (Teste: ${teste} vs DEF: ${targetDef})`, 'normal');
+        }
+
+        if (verificarVitoriaInimigo()) return true;
+    }
+    return false;
+}
+
+// HABILIDADES
+function abrirModalHabilidades() {
+    document.getElementById('modalEnergiaTxt').innerText = `${gameState.player.energiaatual}/${gameState.player.energiamax}`;
+    
+    const grid = document.getElementById('containerHabilidadesGrid');
+    grid.innerHTML = '';
+
+    LISTA_HABILIDADES.forEach(hab => {
+        const temEnergia = gameState.player.energiaatual >= hab.custo;
+        const div = document.createElement('div');
+        div.className = `relative p-4 rounded-xl border flex items-center justify-between transition overflow-hidden group ${
+            temEnergia ? 'bg-slate-950/80 border-slate-800 hover:border-purple-500/60 cursor-pointer' 
+            : 'bg-slate-950/40 border-slate-900 cursor-not-allowed opacity-80'
+        }`;
+
+        if (temEnergia) div.onclick = () => usarHabilidade(hab.id);
+
+        div.innerHTML = `
+            <div class="flex items-center gap-3 relative z-0">
+                <span class="text-3xl transition group-hover:scale-110">${hab.icone}</span>
+                <div>
+                    <div class="font-bold text-sm ${hab.cor}">${hab.nome}</div>
+                    <div class="text-xs text-slate-400">${hab.desc}</div>
+                </div>
+            </div>
+            <span class="text-xs bg-cyan-950 text-cyan-300 font-bold px-2.5 py-1 rounded-lg border border-cyan-800 shrink-0 ml-2 relative z-0">${hab.custo} Energia</span>
+            ${!temEnergia ? `
+                <div class="absolute inset-0 bg-black/75 backdrop-blur-[1px] flex items-center justify-center gap-2 z-10">
+                    <span class="text-xl">🔒</span>
+                    <span class="text-xs font-bold text-red-400 uppercase tracking-wider">Energia Insuficiente (${hab.custo})</span>
+                </div>
+            ` : ''}
+        `;
+        grid.appendChild(div);
+    });
+
+    document.getElementById('modalHabilidades').classList.remove('hidden');
+}
+
+function fecharModalHabilidades() {
+    document.getElementById('modalHabilidades').classList.add('hidden');
+}
+
+function usarHabilidade(op) {
+    const p = gameState.player;
+    const target = gameState.bossAtivo ? gameState.boss : gameState.inimigo;
+    const isBoss = gameState.bossAtivo;
+
+    const custos = {1: 3, 2: 4, 3: 4, 4: 8, 5: 6, 6: 7, 7: 10, 8: 8};
+    if (p.energiaatual < custos[op]) {
+        logMsg(`⚠️ Energia insuficiente!`, 'normal');
+        fecharModalHabilidades();
+        return;
+    }
+
+    p.energiaatual -= custos[op];
+    AudioSys.playSpell();
+    fecharModalHabilidades();
+
+    switch(op) {
+        case 1:
+            let d20 = Math.floor(Math.random() * 20) + 1;
+            let teste = d20 + p.atkpla + 2;
+            let dano = Math.floor(Math.random() * p.tipdan) + 1 + p.danpla + 1;
+            let targetDef = isBoss ? target.defboss : target.defini;
+            if (teste >= targetDef) {
+                logMsg(`✨ <b>Ataque Aprimorado acertou!</b> Causou ${dano} de dano.`, 'spell');
+                if(isBoss) target.vidatual -= dano; else target.vidatualini -= dano;
+            } else { logMsg(`❌ Ataque Aprimorado errou!`, 'normal'); }
+            break;
+        case 2:
+            logMsg(`🛡️ <b>Postura de Contra-Ataque Especial ativada!</b> (Reage com 2x ataques)`, 'spell');
+            gameState.tipoContraAtaque = 2;
+            break;
+        case 3:
+            curarPlayer(6);
+            logMsg(`💚 <b>Feitiço de Cura!</b> Restaurou +6 de Vida.`, 'player');
+            break;
+        case 4:
+            if (!temStatus(target.status, 'Chamas')) {
+                target.status.push({ tipo: 'Chamas', danoPorRodada: gameState.danchama, reducaoDef: 1, duracao: -1 });
+                if(isBoss) target.defboss -= 1; else target.defini -= 1;
+                logMsg(`🔥 Aplica <b>Chamas</b>! Alvo recebe ${gameState.danchama} dano/rodada e -1 Defesa.`, 'spell');
+            }
+            break;
+        case 5:
+            if (!temStatus(target.status, 'Congelado')) {
+                target.status.push({ tipo: 'Congelado', danoPorRodada: 0, reducaoDef: gameState.redconge, duracao: -1 });
+                if(isBoss) target.defboss -= gameState.redconge; else target.defini -= gameState.redconge;
+                logMsg(`❄️ Aplica <b>Congelamento</b>! Defesa do alvo reduzida em ${gameState.redconge}.`, 'spell');
+            }
+            break;
+        case 6:
+            if (!temStatus(target.status, 'Envenenado')) {
+                target.status.push({ tipo: 'Envenenado', danoPorRodada: gameState.danven, reducaoDef: 0, duracao: 4 });
+                logMsg(`🧪 Aplica <b>Envenenamento</b>! ${gameState.danven} dano por 4 rodadas.`, 'spell');
+            }
+            break;
+        case 7:
+            if (!temStatus(target.status, 'Sono')) {
+                let dur = Math.floor(Math.random() * gameState.rodormin) + 1;
+                target.status.push({ tipo: 'Sono', danoPorRodada: 0, reducaoDef: 0, duracao: dur });
+                logMsg(`💤 Aplica <b>Sono</b>! Inimigo adormecido por ${dur} rodadas.`, 'spell');
+            }
+            break;
+        case 8:
+            if (!temStatus(target.status, 'Sangramento')) {
+                target.status.push({ tipo: 'Sangramento', danoPorRodada: gameState.dansang, reducaoDef: 0, duracao: 7 });
+                logMsg(`🩸 Aplica <b>Sangramento</b>! ${gameState.dansang} dano por 7 rodadas.`, 'spell');
+            }
+            break;
+    }
+
+    if (!verificarVitoriaInimigo()) finalizarTurnoPlayer();
+}
+
+// TURNO ADVERSÁRIO E VERIFICAÇÕES
+function finalizarTurnoPlayer() {
+    if (gameState.bossAtivo) {
+        processarStatus(gameState.boss);
+        if (verificarVitoriaInimigo()) return;
+    } else {
+        processarStatus(gameState.inimigo);
+        if (verificarVitoriaInimigo()) return;
+    }
+
+    const p = gameState.player;
+    const target = gameState.bossAtivo ? gameState.boss : gameState.inimigo;
+
+    if (temStatus(target.status, 'Sono')) {
+        logMsg(`💤 <b>${target.nome} está dormindo</b> e perdeu o turno!`, 'status');
+    } else {
+        let atkBonus = gameState.bossAtivo ? target.atkboss : target.atkini;
+        let tipDan = gameState.bossAtivo ? target.tipdanboss : target.tipdanini;
+        let danBonus = gameState.bossAtivo ? target.danoss : target.danini;
+
+        let val = Math.floor(Math.random() * 20) + 1 + atkBonus;
+
+        if (val >= p.defpla) {
+            let dano = Math.floor(Math.random() * tipDan) + 1 + danBonus - p.rd;
+            if (dano < 0) dano = 0;
+            p.vidaatualpla -= dano;
+            if (p.vidaatualpla < 0) p.vidaatualpla = 0;
+            logMsg(`👹 <b>${target.nome} atacou!</b> Causou ${dano} de dano!`, 'enemy');
+        } else {
+            logMsg(`🛡️ <b>${target.nome} errou o ataque!</b>`, 'normal');
+            if (gameState.tipoContraAtaque === 1) {
+                if (executarContraAtaque(1)) return;
+            } else if (gameState.tipoContraAtaque === 2) {
+                if (executarContraAtaque(2)) return;
+            }
+        }
+    }
+
+    gameState.tipoContraAtaque = 0;
+
+    if (p.vidaatualpla <= 0) {
+        document.getElementById('goTotalMortos').innerText = gameState.mortosTotais;
+        document.getElementById('goTotalRodadas').innerText = gameState.rodada;
+        document.getElementById('modalGameOver').classList.remove('hidden');
+        return;
+    }
+
+    gameState.rodada++;
+    atualizarTela();
+}
+
+// LOOT E ITENS
+function abrirModalLoot() {
+    const container = document.getElementById('cardsLootContainer');
+    container.innerHTML = '';
+
+    let escolhidos = [];
+    while (escolhidos.length < 3) {
+        let rand = CATALOGO_ITENS[Math.floor(Math.random() * CATALOGO_ITENS.length)];
+        if (!escolhidos.includes(rand)) escolhidos.push(rand);
+    }
+
+    escolhidos.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "bg-slate-950 border border-slate-800 hover:border-amber-400 p-4 rounded-xl cursor-pointer transition flex flex-col justify-between group";
+        card.onclick = () => aplicarItemLoot(item);
+
+        card.innerHTML = `
+            <div>
+                <div class="text-3xl mb-2 group-hover:scale-110 transition">🎁</div>
+                <h4 class="font-bold text-amber-400 text-sm mb-1">${item.nome}</h4>
+                <p class="text-xs text-slate-400">${item.desc}</p>
+            </div>
+            <button class="mt-4 py-1.5 bg-amber-500/20 text-amber-300 font-bold text-xs rounded border border-amber-500/40">Equipar</button>
+        `;
+        container.appendChild(card);
+    });
+    document.getElementById('modalLoot').classList.remove('hidden');
+}
+
+function aplicarItemLoot(item) {
+    item.efeito(gameState.player);
+    logMsg(`🎁 Item Equipado: <b>${item.nome}</b> (${item.desc})`, 'system');
+    document.getElementById('modalLoot').classList.add('hidden');
+    atualizarTela();
+}
+
+function dropItemBoss() {
+    let val = Math.floor(Math.random() * 2) + 1;
+    const p = gameState.player;
+    if (val === 1) {
+        logMsg(`👑 Drop do Boss: <b>Máscara de Lobo!</b> (+4 Max HP, +4 Atk, -2 Defesa)`, 'crit');
+        p.vidamaxpla += 4;
+        curarPlayer(4);
+        p.atkpla += 4;
+        p.defpla -= 2;
+    } else {
+        logMsg(`👑 Drop do Boss: <b>Livro Endiabrado!</b> (+3 Atk, +3 Dano, Perde 25% HP)`, 'crit');
+        p.atkpla += 3;
+        p.danpla += 3;
+        p.vidaatualpla = Math.floor(p.vidaatualpla * 0.75);
+    }
+    atualizarTela();
+}
+
+function reiniciarJogo() { location.reload(); }
+
+// UI UPDATES
+function atualizarTela() {
+    const p = gameState.player;
+    const ini = gameState.inimigo;
+    const boss = gameState.boss;
+    const isBoss = gameState.bossAtivo;
+
+    document.getElementById('txtProgAmbiente').innerText = `${gameState.inimigosParaAmbiente}/2`;
+    document.getElementById('txtAbates').innerText = gameState.mortosTotais;
+    document.getElementById('txtRodada').innerText = gameState.rodada;
+
+    document.getElementById('playerClasseBadge').innerText = p.classeNome;
+    document.getElementById('txtPlayerVida').innerText = `${p.vidaatualpla} / ${p.vidamaxpla}`;
+    document.getElementById('barPlayerVida').style.width = `${Math.max(0, (p.vidaatualpla / p.vidamaxpla) * 100)}%`;
+
+    document.getElementById('txtPlayerEnergia').innerText = `${p.energiaatual} / ${p.energiamax}`;
+    document.getElementById('barPlayerEnergia').style.width = `${Math.max(0, (p.energiaatual / p.energiamax) * 100)}%`;
+
+    document.getElementById('attrPlayerAtk').innerText = `+${p.atkpla}`;
+    document.getElementById('attrPlayerDano').innerText = `+${p.danpla}`;
+    document.getElementById('attrPlayerDef').innerText = p.defpla;
+    document.getElementById('attrPlayerRD').innerText = p.rd;
+    document.getElementById('attrPlayerDado').innerText = `1d${p.tipdan}`;
+    document.getElementById('attrPlayerCrit').innerText = p.critico;
+
+    const cardInimigo = document.getElementById('cardInimigoContainer');
+    if (isBoss) {
+        cardInimigo.className = "bg-slate-900/95 border-2 border-red-500/80 rounded-2xl p-4 shadow-2xl backdrop-blur relative overflow-hidden glow-red";
+        document.getElementById('inimigoTipoBadge').innerText = "BOSS";
+        document.getElementById('inimigoTipoBadge').className = "text-[10px] uppercase font-bold bg-red-600 text-white px-2 py-0.5 rounded";
+        document.getElementById('inimigoAvatar').innerText = "🐲";
+        document.getElementById('inimigoNome').innerText = boss.nome;
+        document.getElementById('txtInimigoVida').innerText = `${boss.vidatual} / ${boss.vidamax}`;
+        document.getElementById('barInimigoVida').style.width = `${Math.max(0, (boss.vidatual / boss.vidamax) * 100)}%`;
+        document.getElementById('attrInimigoDef').innerText = boss.defboss;
+        document.getElementById('attrInimigoAtk').innerText = `+${boss.atkboss}`;
+        document.getElementById('attrInimigoDano').innerText = `+${boss.danoss}`;
+        document.getElementById('attrInimigoDado').innerText = `1d${boss.tipdanboss}`;
+        renderBadgesStatus(boss.status);
+    } else {
+        cardInimigo.className = "bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur relative overflow-hidden";
+        document.getElementById('inimigoTipoBadge').innerText = "Inimigo";
+        document.getElementById('inimigoTipoBadge').className = "text-[10px] uppercase font-bold bg-red-500/20 text-red-400 border border-red-500/40 px-2 py-0.5 rounded";
+        document.getElementById('inimigoAvatar').innerText = "👺";
+        document.getElementById('inimigoNome').innerText = ini.nome;
+        document.getElementById('txtInimigoVida').innerText = `${ini.vidatualini} / ${ini.vidamaxini}`;
+        document.getElementById('barInimigoVida').style.width = `${Math.max(0, (ini.vidatualini / ini.vidamaxini) * 100)}%`;
+        document.getElementById('attrInimigoDef').innerText = ini.defini;
+        document.getElementById('attrInimigoAtk').innerText = `+${ini.atkini}`;
+        document.getElementById('attrInimigoDano').innerText = `+${ini.danini}`;
+        document.getElementById('attrInimigoDado').innerText = `1d${ini.tipdanini}`;
+        renderBadgesStatus(ini.status);
+    }
+}
+
+function renderBadgesStatus(statusArray) {
+    const container = document.getElementById('containerStatusInimigo');
+    container.innerHTML = '';
+    if (!statusArray || statusArray.length === 0) {
+        container.innerHTML = '<span class="text-xs text-slate-400 italic">Nenhum efeito ativo</span>';
+        return;
+    }
+    statusArray.forEach(s => {
+        const span = document.createElement('span');
+        let colorClass = "bg-slate-800 text-slate-300 border-slate-600";
+        if (s.tipo === 'Chamas') colorClass = "bg-orange-950 text-orange-300 border-orange-800";
+        if (s.tipo === 'Congelado') colorClass = "bg-sky-950 text-sky-300 border-sky-800";
+        if (s.tipo === 'Envenenado') colorClass = "bg-lime-950 text-lime-300 border-lime-800";
+        if (s.tipo === 'Sono') colorClass = "bg-indigo-950 text-indigo-300 border-indigo-800";
+        if (s.tipo === 'Sangramento') colorClass = "bg-rose-950 text-rose-300 border-rose-800";
+        let durTxt = s.duracao === -1 ? "Infinito" : `${s.duracao}t`;
+        span.className = `text-[10px] font-bold border px-2 py-0.5 rounded-lg flex items-center gap-1 ${colorClass}`;
+        span.innerText = `${s.tipo} (${durTxt})`;
+        container.appendChild(span);
+    });
+}
