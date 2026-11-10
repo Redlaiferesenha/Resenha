@@ -311,6 +311,7 @@ function verificarVitoriaInimigo() {
             logMsg(`🏆 <b>VOCÊ DERROTOU O BOSS ${gameState.boss.nome}!</b>`, 'crit');
             gameState.bossAtivo = false;
             gameState.mortosTotais++;
+            dropItemBoss();
             spawnNovoInimigo();
             atualizarTela();
             return true;
@@ -320,7 +321,7 @@ function verificarVitoriaInimigo() {
             logMsg(`☠️ Você derrotou ${gameState.inimigo.nome}!`, 'player');
             gameState.mortosTotais++;
             gameState.mortosNormais++;
-
+            abrirModalLoot();
             // A cada 5 abates, surge um Boss aleatório
             if (gameState.mortosTotais % 5 === 0) {
                 gameState.bossAtivo = true;
