@@ -406,18 +406,19 @@
             <h2 id="detNome" class="text-2xl font-black text-cyan-400 font-cinzel mb-1">Nome</h2>
             <p id="detClasse" class="text-xs text-slate-400 uppercase font-bold mb-4 bg-slate-800 inline-block px-2 py-1 rounded">Classe</p>
             
-            <div class="grid grid-cols-3 gap-2 mb-4 text-center text-xs">
+            <div class="grid grid-cols-4 gap-2 mb-4 text-center text-[10px] sm:text-xs">
                 <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-rose-400 block">HP Max</span><b id="detHp">0</b></div>
-                <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-amber-400 block">Ataque</span><b id="detAtk">0</b></div>
-                <div class="bg-slate-950 p-2 rounded border border-slate-800"><span class="text-blue-400 block">Defesa</span><b id="detDef">0</b></div>
-            </div>
+                <div class="bg-slate-95Vamos resolver cada um desses pontos para deixar o seu sistema perfeito.
     
-            <h3 class="text-xs text-slate-500 uppercase font-bold mb-2">Itens Coletados:</h3>
-            <div id="detItens" class="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-                <!-- Itens aparecerão aqui -->
-            </div>
-        </div>
-    </div>
+    ### 1º Ocultar o jogo antes do login
+    Na imagem que você mandou, a tela de login está por cima do jogo rolando atrás. Para resolver isso, você precisa englobar toda a interface do jogo (status, ações, log, etc.) dentro de uma `div` e deixá-la oculta, assim como fizemos com a seleção de classes.
+    
+    **No HTML:**
+    Encontre onde começa a interface do jogo (logo após a tela de seleção de classe) e coloque tudo dentro de uma div com `id="telaJogo"` e `class="hidden"`:
+    ```html
+    <section id="telaJogo" class="hidden">
+        <!-- TODO O SEU HTML DO JOGO (Status, Ações, Log, Inimigo, etc) FICA AQUI DENTRO -->
+    </section>
 
     
     <script src="js/data.js"></script>
