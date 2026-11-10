@@ -306,67 +306,71 @@ function limparStatus(target, isBoss) {
 }
 
 function verificarVitoriaInimigo() {
-    if (!gameState.bossAtivo && gameState.inimigo.vidatualini <= 0) {
-        logMsg(`💀 <b>${gameState.inimigo.nome} foi derrotado!</b>`, 'system');
-        limparStatus(gameState.inimigo, false);
-        gameState.mortosNormais++;
-        gameState.mortosTotais++;
-        
-        logMsg(`✨ Você recuperou +7 de vida pela vitória!`, 'player');
-        curarPlayer(7);
-        abrirModalLoot();
-
-        gameState.inimigosParaAmbiente++;
-        if (gameState.inimigosParaAmbiente === 2) {
-            gerarNovoAmbiente();
-            gameState.inimigosParaAmbiente = 0;
-        }
-
-        if (gameState.mortosTotais % 5 === 0) {
-            gameState.bossAtivo = true;
-            gameState.boss.vidatual = gameState.boss.vidamax;
-            aplicarEfeitoAmbiente(gameState.ambienteAtual, gameState.player, gameState.inimigo, gameState.boss, true);
-            limparLog();
-            logMsg(`⚠️ <b>UM BOSS PODEROSO APARECEU!</b>`, 'crit');
-        } else {
+    if (gameState.bossAtivo) {
+        if (gameState.boss.vidatual <= 0) {
+            logMsg(`🏆 <b>VOCÊ DERROTOU O BOSS ${gameState.boss.nome}!</b>`, 'crit');
+            gameState.bossAtivo = false;
+            gameState.mortosTotais++;
             spawnNovoInimigo();
+            atualizarTela();
+            return true;
         }
-        return true;
-    }
+    } else {
+        if (gameState.inimigo.vidatualini <= 0) {
+            logMsg(`☠️ Você derrotou ${gameState.inimigo.nome}!`, 'player');
+            gameState.mortosTotais++;
+            gameState.mortosNormais++;
 
-    if (gameState.bossAtivo && gameState.boss.vidatual <= 0) {
-        logMsg(`👑 <b>O BOSS FOI DERROTADO!</b>`, 'crit');
-        limparStatus(gameState.boss, true);
-        removerEfeitoAmbiente(gameState.ambienteAtual, gameState.player, gameState.inimigo, gameState.boss, true);
-        gameState.mortosTotais++;
-        
-        logMsg(`✨ Recompensa de Boss: +14 de Vida e +5 de Energia Máxima!`, 'player');
-        curarPlayer(14);
-        gameState.player.energiamax += 5;
-        
-        dropItemBoss();
-        gameState.bossAtivo = false;
-        spawnNovoInimigo();
-        return true;
+            // A cada 5 abates, surge um Boss aleatório
+            if (gameState.mortosTotais % 5 === 0) {
+                gameState.bossAtivo = true;
+                
+                const bossModelo = BESTIARIO_BOSSES[Math.floor(Math.random() * BESTIARIO_BOSSES.length)];
+                const esc = 1 + (gameState.mortosTotais * 0.15);
+
+                gameState.boss = {
+                    nome: bossModelo.nome,
+                    imagem: bossModelo.img,
+                    vidamax: Math.floor(bossModelo.vidabase * esc),
+                    vidatual: Math.floor(bossModelo.vidabase * esc),
+                    atkboss: Math.floor(bossModelo.atkbase * esc),
+                    defboss: bossModelo.defbase,
+                    danoss: Math.floor(bossModelo.danobase * esc),
+                    tipdanoboss: 2
+                };
+
+                aplicarEfeitoAmbiente(gameState.ambienteAtual, gameState.player, gameState.inimigo, gameState.boss, true);
+                limparLog();
+                logMsg(`⚠️ <b>${gameState.boss.nome} APARECEU!</b>`, 'crit');
+            } else {
+                spawnNovoInimigo();
+            }
+            atualizarTela();
+            return true;
+        }
     }
     return false;
 }
 
 function spawnNovoInimigo() {
     limparLog();
-    
-    gameState.inimigo.vidamaxini += Math.floor(gameState.inimigo.vidamaxini * 0.15);
-    gameState.inimigo.vidatualini = gameState.inimigo.vidamaxini;
 
-    if (gameState.mortosNormais === 2) {
-        gameState.inimigo.atkini += 2;
-        gameState.inimigo.defini += 1;
-        gameState.inimigo.danini += 1;
-        gameState.inimigo.tipdanini += 1;
-        gameState.mortosNormais = 0;
-    }
-    gameState.inimigo.nome = `Goblin Nível ${gameState.mortosTotais + 1}`;
-    logMsg(`⚔️ Um novo <b>${gameState.inimigo.nome}</b> surge!`, 'enemy');
+    // Sorteia um monstro aleatório
+    const modelo = BESTIARIO_INIMIGOS[Math.floor(Math.random() * BESTIARIO_INIMIGOS.length)];
+    const multiplicador = 1 + (gameState.mortosTotais * 0.1); // Aumenta 10% de força a cada vitória
+
+    gameState.inimigo = {
+        nome: `${modelo.nome} (Nível ${gameState.mortosTotais + 1})`,
+        imagem: modelo.img,
+        vidamaxini: Math.floor(modelo.vidabase * multiplicador),
+        vidatualini: Math.floor(modelo.vidabase * multiplicador),
+        atkini: Math.floor(modelo.atkbase + (gameState.mortosTotais * 0.5)),
+        defini: modelo.defbase,
+        danini: Math.floor(modelo.danobase + (gameState.mortosTotais * 0.3)),
+        tipdanini: 1
+    };
+
+    logMsg(`⚔️ Um <b>${gameState.inimigo.nome}</b> surge!`, 'enemy');
 }
 
 function acaoAtacar() {
@@ -733,6 +737,12 @@ function atualizarTela() {
         document.getElementById('attrInimigoDef').innerText = formatarModificador(ini.defini); // <---
         document.getElementById('attrInimigoDado').innerText = `1d${ini.tipdanini}`;
         renderBadgesStatus(ini.status);
+    }
+const oponente = gameState.bossAtivo ? gameState.boss : gameState.inimigo;
+const imgElement = document.getElementById('inimigoAvatarImg');
+
+    if (imgElement && oponente.imagem) {
+        imgElement.src = oponente.imagem;
     }
 }
 
