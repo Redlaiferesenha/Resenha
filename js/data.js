@@ -2,9 +2,9 @@
 const CLASS_IMAGES = {
     neutro: "imagens/imagensperso/neutro.png",
     defensor: "imagens/imagensperso/defensor.jpg",
-    assassino: "imagens/imagensperso/assasino.png",
-    energetico: "imagens/imagensperso/energético.jpg",
-    arqueiro: "imagens/imagensperso/arqueirpo.png",
+    assassino: "imagens/imagensperso/assasino.png",     
+    energetico: "imagens/imagensperso/energetico.jpg",   
+    arqueiro: "imagens/imagensperso/arqueirpo.png",   
     vampiro: "imagens/imagensperso/vampiro.jpg"
 };
 
