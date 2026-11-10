@@ -13,6 +13,23 @@ const AMBIENTE_IMAGES = {
     3: "imagens/imagensfundo/pantano.png",
     4: "imagens/imagensfundo/vulcao.png"
 };
+const CATALOGO_ITENS = [
+    { id: 1, nome: "Óculos de Aventureiro", img: "imagens/imagensitem/oculosaventureiro.png", desc: "+2 Bônus de Ataque", efeito: (p) => p.atkpla += 2 },
+    { id: 2, nome: "Colete à Prova de Balas", img: "imagens/imagensitem/colete.jpg", desc: "+2 Bônus de Defesa", efeito: (p) => p.defpla += 2 },
+    { id: 3, nome: "Dado Estranho", img: "imagens/imagensitem/dadoestranho.png", desc: "+1 no Lado do Dado de Dano", efeito: (p) => p.tipdan += 1 },
+    { id: 4, nome: "Pedra de Amolar", img: "imagens/imagensitem/pedramolar.png", desc: "+2 Dano Adicional", efeito: (p) => p.danpla += 2 },
+    { id: 5, nome: "Laser de Mira", img: "imagens/imagensitem/lasermira.png", desc: "-1 na Margem do Crítico", efeito: (p) => p.critico -= 1 },
+    { id: 6, nome: "Faca de Arremesso", img: "imagens/imagensitem/facarremeso.png", desc: "+3 Dano, -2 Bônus Ataque", efeito: (p) => { p.danpla += 3; p.atkpla -= 2; } },
+    { id: 7, nome: "Red Bull Vencido", img: "imagens/imagensitem/redbull.png", desc: "+4 Energia Atual", efeito: (p) => p.energiaatual += 4 },
+    { id: 8, nome: "Bituca de Cigarro", img: "imagens/imagensitem/bituca.png", desc: "+1 Dano do Feitiço Chamas", efeito: () => gameState.danchama += 1 },
+    { id: 9, nome: "Catuaba", img: "imagens/imagensitem/catuaba.png", desc: "+8 HP, +4 Max HP, -1 Atk", efeito: (p) => { p.vidamaxpla += 4; curarPlayer(8); p.atkpla -= 1; } },
+    { id: 10, nome: "Olho de Aranha", img: "imagens/imagensitem/olharanha.png", desc: "+1 Dano de Veneno", efeito: () => gameState.danven += 1 },
+    { id: 11, nome: "Analgésico", img: "imagens/imagensitem/analgesico.png", desc: "+1 Resistência a Dano (RD)", efeito: (p) => p.rd += 1 },
+    { id: 12, nome: "Máscara para Dormir", img: "imagens/imagensitem/mascaradormir.png", desc: "+1 Turno de Duração do Sono", efeito: () => gameState.rodormin += 1 },
+    { id: 13, nome: "Picolé do Amor", img: "imagens/imagensitem/picoleamor.png", desc: "+1 Redução de Defesa em Gelos", efeito: () => gameState.redconge += 1 },
+    { id: 14, nome: "Labubu", img: "imagens/imagensitem/labubu.png", desc: "+2 Atk, +2 Max Energia, -3 HP", efeito: (p) => { p.atkpla += 2; p.energiamax += 2; p.vidaatualpla -= 3; } },
+    { id: 15, nome: "Dente Falso de Vampiro", img: "imagens/imagensitem/dentefalso.png", desc: "+1 Dano de Sangramento", efeito: () => gameState.dansang += 1 }
+];
 
 let gameState = {
     rodada: 1,
