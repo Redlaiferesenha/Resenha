@@ -1,4 +1,3 @@
-// AUDIO SYNTHESIZER (NATIVO WEB AUDIO API)
 const AudioSys = {
     ctx: null,
     init() {
@@ -50,7 +49,6 @@ const AudioSys = {
     }
 };
 
-// EFEITO DE PARTÍCULAS CANVAS POR AMBIENTE
 const canvas = document.getElementById('bgCanvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
@@ -103,7 +101,6 @@ function animateBg() {
 }
 animateBg();
 
-// INICIALIZAÇÃO DE IMAGENS
 window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('img-neutro').src = CLASS_IMAGES.neutro;
     document.getElementById('img-defensor').src = CLASS_IMAGES.defensor;
@@ -113,7 +110,6 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('img-vampiro').src = CLASS_IMAGES.vampiro;
 });
 
-// INICIALIZADOR DE CLASSE
 function selecionarClasse(op) {
     gameState.player.classeId = op;
     switch(op) {
@@ -159,7 +155,6 @@ function selecionarClasse(op) {
     atualizarTela();
 }
 
-// LOG DE BATALLA
 function logMsg(msg, tipo = 'normal') {
     const logContainer = document.getElementById('combatLog');
     const div = document.createElement('div');
@@ -182,26 +177,25 @@ function limparLog() {
     document.getElementById('combatLog').innerHTML = '';
 }
 
-// AMBIENTES E SEUS EFEITOS
 function aplicarEfeitoAmbiente(amb, player, ini, boss, isBoss) {
     const target = isBoss ? boss : ini;
     switch(amb) {
-        case 1: // Floresta
+        case 1: 
             player.defpla += 2;
             if(isBoss) target.atkboss -= 2; else target.atkini -= 2;
             break;
-        case 2: // Glacial
+        case 2: 
             player.energiamax -= 2;
             if (player.energiaatual > player.energiamax) player.energiaatual = player.energiamax;
             if(isBoss) target.defboss -= 2; else target.defini -= 2;
             gameState.redconge += 1;
             break;
-        case 3: // Pantano
+        case 3: 
             player.atkpla -= 2;
             if(isBoss) { target.atkboss -= 2; target.defboss += 1; } 
             else { target.atkini -= 2; target.defini += 1; }
             break;
-        case 4: // Vulcao
+        case 4: 
             player.atkpla += 3;
             if(isBoss) target.atkboss += 3; else target.atkini += 3;
             gameState.danchama += 2;
@@ -259,7 +253,6 @@ function gerarNovoAmbiente() {
     logMsg(`🌎 <b>O AMBIENTE MUDOU:</b> ${nomes[novoAmb]} - ${descs[novoAmb]}`, 'system');
 }
 
-// LOGICA GERAL E STATUS
 function curarPlayer(valor) {
     gameState.player.vidaatualpla += valor;
     if (gameState.player.vidaatualpla > gameState.player.vidamaxpla) {
@@ -277,7 +270,6 @@ function processarStatus(target) {
     for (let i = target.status.length - 1; i >= 0; i--) {
         let s = target.status[i];
 
-        // LOGICA DE DANO COM O BUG CORRIGIDO PARA ATACAR BOSS OU INIMIGO COMUM
         if (s.tipo === 'Chamas' || s.tipo === 'Envenenado' || s.tipo === 'Sangramento') {
             if (target.vidatualini !== undefined) {
                 target.vidatualini -= s.danoPorRodada;
@@ -371,7 +363,6 @@ function spawnNovoInimigo() {
     logMsg(`⚔️ Um novo <b>${gameState.inimigo.nome}</b> surge!`, 'enemy');
 }
 
-// AÇÕES DO PLAYER
 function acaoAtacar() {
     AudioSys.playHit();
     const p = gameState.player;
@@ -465,7 +456,6 @@ function executarContraAtaque(vezes = 1) {
     return false;
 }
 
-// HABILIDADES
 function abrirModalHabilidades() {
     document.getElementById('modalEnergiaTxt').innerText = `${gameState.player.energiaatual}/${gameState.player.energiamax}`;
     
@@ -581,7 +571,6 @@ function usarHabilidade(op) {
     if (!verificarVitoriaInimigo()) finalizarTurnoPlayer();
 }
 
-// TURNO ADVERSÁRIO E VERIFICAÇÕES
 function finalizarTurnoPlayer() {
     if (gameState.bossAtivo) {
         processarStatus(gameState.boss);
@@ -632,7 +621,6 @@ function finalizarTurnoPlayer() {
     atualizarTela();
 }
 
-// LOOT E ITENS
 function abrirModalLoot() {
     const container = document.getElementById('cardsLootContainer');
     container.innerHTML = '';
@@ -688,7 +676,6 @@ function dropItemBoss() {
 
 function reiniciarJogo() { location.reload(); }
 
-// UI UPDATES
 function atualizarTela() {
     const p = gameState.player;
     const ini = gameState.inimigo;
