@@ -6,7 +6,13 @@ const CLASS_IMAGES = {
     arqueiro: "imagens/imagensperso/arqueirpo.png",   
     vampiro: "imagens/imagensperso/vampiro.jpg"
 };
-
+const AMBIENTE_IMAGES = {
+    0: "imagens/imagensfundo/neutro.png",
+    1: "imagens/imagensfundo/floresta.png",
+    2: "imagens/imagensfundo/glacial.png",
+    3: "imagens/imagensfundo/pantano.png",
+    4: "imagens/imagensfundo/vulcao.png"
+};
 
 let gameState = {
     rodada: 1,
