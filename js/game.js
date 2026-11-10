@@ -689,10 +689,7 @@ function abrirModalLoot() {
 
 function aplicarItemLoot(item) {
     item.efeito(gameState.player);
-    gameState.player.itensInventario.push({ 
-    nome: item.nome, 
-    imagem: item.imagem
-    });
+    gameState.player.itensInventario.push({ nome: item.nome, img: item.imagem });
     logMsg(`🎁 Item Equipado: <b>${item.nome}</b> (${item.desc})`, 'system');
     document.getElementById('modalLoot').classList.add('hidden');
     atualizarTela();
@@ -724,7 +721,7 @@ function dropItemBoss() {
         
         card.onclick = () => {
             item.efeito(gameState.player);
-            gameState.player.itensInventario.push(item.nome);
+            gameState.player.itensInventario.push({ nome: item.nome, img: item.imagem });
             logMsg(`👑 Drop do Boss Equipado: <b>${item.nome}</b> (${item.desc})`, 'crit');
             document.getElementById('modalLoot').classList.add('hidden');
             atualizarTela();
@@ -857,30 +854,31 @@ function renderBadgesStatus(statusArray) {
 let currentUser = "";
 
 function registrar() {
-    // Transforma em minúsculo e remove espaços para evitar duplicatas falsas
-    let u = document.getElementById('inputUser').value.trim().toLowerCase(); 
+    let u = document.getElementById('inputUser').value.trim();
     let p = document.getElementById('inputPass').value.trim();
+    if (!u || !p) return alert("Preencha usuário e senha!");
     
-    if (u === "" || p === "") return alert("Preencha usuário e senha!");
-    if (u.length < 3) return alert("O nome de usuário deve ter pelo menos 3 letras/números.");
+    let userKey = u.toLowerCase(); // Chave em minúsculo para evitar duplicatas
     
     let users = JSON.parse(localStorage.getItem('rpgUsers') || '{}');
-    if (users[u]) return alert("Este nome de usuário já existe!");
+    if (users[userKey]) return alert("Este nome de usuário já existe!");
     
-    users[u] = p;
+    // Salvamos a chave em minúsculo, mas guardamos o nome original (ex: "Juninho") para ficar bonito no placar
+    users[userKey] = { nome: u, senha: p };
     localStorage.setItem('rpgUsers', JSON.stringify(users));
     alert("Conta criada com sucesso! Você já pode entrar.");
 }
 
 function logar() {
-    let u = document.getElementById('inputUser').value.trim().toLowerCase();
+    let u = document.getElementById('inputUser').value.trim();
     let p = document.getElementById('inputPass').value.trim();
+    if (!u || !p) return alert("Preencha usuário e senha!");
     
-    if (u === "" || p === "") return alert("Preencha usuário e senha!");
-    
+    let userKey = u.toLowerCase();
     let users = JSON.parse(localStorage.getItem('rpgUsers') || '{}');
-    if (users[u] === p) {
-        currentUser = document.getElementById('inputUser').value.trim(); // Salva como o jogador digitou originalmente para o placar
+    
+    if (users[userKey] && users[userKey].senha === p) {
+        currentUser = users[userKey].nome; // Puxa o nome com as letras maiúsculas originais
         document.getElementById('telaLogin').classList.add('hidden');
         document.getElementById('telaSelecaoClasse').classList.remove('hidden');
     } else {
@@ -954,11 +952,13 @@ function mostrarDetalhesJogador(index) {
     if (!run.itens || run.itens.length === 0) {
         divItens.innerHTML = '<span class="text-slate-500 text-xs">Nenhum item coletado.</span>';
     } else {
-        run.itens.forEach(itemNome => {
-            const span = document.createElement('span');
-            span.className = "bg-slate-800 text-slate-300 text-[10px] px-2 py-1 rounded border border-slate-700";
-            span.innerText = itemNome;
-            divItens.appendChild(span);
+        // Se o item for salvo como objeto com imagem
+        run.itens.forEach(item => {
+            const imgTag = document.createElement('img');
+            imgTag.src = item.img || 'caminho/para/imagem-padrao.png'; // coloque uma imagem padrão caso falhe
+            imgTag.className = "w-8 h-8 rounded border border-slate-700 bg-slate-800";
+            imgTag.title = item.nome || item; // Mostra o nome ao passar o mouse
+            divItens.appendChild(imgTag);
         });
     }
 
