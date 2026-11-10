@@ -336,7 +336,7 @@ function verificarVitoriaInimigo() {
                     atkboss: Math.floor(bossModelo.atkbase * esc),
                     defboss: bossModelo.defbase,
                     danoss: Math.floor(bossModelo.danobase * esc),
-                    tipdanoboss: 2
+                    tipdanoboss: 2,
                     status: []
                 };
 
@@ -368,7 +368,7 @@ function spawnNovoInimigo() {
         atkini: Math.floor(modelo.atkbase + (gameState.mortosTotais * 0.5)),
         defini: modelo.defbase,
         danini: Math.floor(modelo.danobase + (gameState.mortosTotais * 0.3)),
-        tipdanini: 1
+        tipdanini: 1,
         status: []
     };
 
