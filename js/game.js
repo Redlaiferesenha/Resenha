@@ -117,16 +117,16 @@ function selecionarClasse(op) {
     gameState.player.classeId = op;
     switch(op) {
         case 1:
-            gameState.player = { classeNome: "Neutro", classeId: 1, vidamaxpla: 30, vidaatualpla: 30, atkpla: 3, danpla: 2, defpla: 14, tipdan: 4, critico: 20, energiamax: 12, energiaatual: 12, rd: 0 };
+            gameState.player = { classeNome: "Neutro", classeId: 1, vidamaxpla: 30, vidaatualpla: 30, atkpla: 3, danpla: 2, defpla: 14, tipdan: 4, critico: 20, energiamax: 12, energiaatual: 12, rd: 0, itensInventario: [] };
             break;
         case 2:
-            gameState.player = { classeNome: "Defensor", classeId: 2, vidamaxpla: 35, vidaatualpla: 35, atkpla: 2, danpla: 2, defpla: 16, tipdan: 4, critico: 20, energiamax: 12, energiaatual: 12, rd: 2 };
+            gameState.player = { classeNome: "Defensor", classeId: 2, vidamaxpla: 35, vidaatualpla: 35, atkpla: 2, danpla: 2, defpla: 16, tipdan: 4, critico: 20, energiamax: 12, energiaatual: 12, rd: 2, itensInventario: [] };
             break;
         case 3:
-            gameState.player = { classeNome: "Assassino", classeId: 3, vidamaxpla: 20, vidaatualpla: 20, atkpla: 4, danpla: 3, defpla: 14, tipdan: 4, critico: 20, energiamax: 14, energiaatual: 14, rd: 0 };
+            gameState.player = { classeNome: "Assassino", classeId: 3, vidamaxpla: 20, vidaatualpla: 20, atkpla: 4, danpla: 3, defpla: 14, tipdan: 4, critico: 20, energiamax: 14, energiaatual: 14, rd: 0, itensInventario: [] };
             break;
         case 4:
-            gameState.player = { classeNome: "Energético", classeId: 4, vidamaxpla: 20, vidaatualpla: 20, atkpla: 3, danpla: 2, defpla: 12, tipdan: 4, critico: 20, energiamax: 17, energiaatual: 17, rd: 0 };
+            gameState.player = { classeNome: "Energético", classeId: 4, vidamaxpla: 20, vidaatualpla: 20, atkpla: 3, danpla: 2, defpla: 12, tipdan: 4, critico: 20, energiamax: 17, energiaatual: 17, rd: 0, itensInventario: [] };
             gameState.danchama += 1;
             gameState.redconge += 1;
             gameState.danven += 1;
@@ -134,13 +134,13 @@ function selecionarClasse(op) {
             gameState.dansang += 1;
             break;
         case 5:
-            gameState.player = { classeNome: "Arqueiro", classeId: 5, vidamaxpla: 20, vidaatualpla: 20, atkpla: 3, danpla: 4, defpla: 16, tipdan: 6, critico: 20, energiamax: 12, energiaatual: 12, rd: 0 };
+            gameState.player = { classeNome: "Arqueiro", classeId: 5, vidamaxpla: 20, vidaatualpla: 20, atkpla: 3, danpla: 4, defpla: 16, tipdan: 6, critico: 20, energiamax: 12, energiaatual: 12, rd: 0, itensInventario: [] };
             gameState.danchama += 1;
             gameState.redconge += 1;
             gameState.danven += 1;
             break;
         case 6:
-            gameState.player = { classeNome: "Vampiro", classeId: 6, vidamaxpla: 30, vidaatualpla: 30, atkpla: 3, danpla: 2, defpla: 14, tipdan: 4, critico: 20, energiamax: 16, energiaatual: 16, rd: 0 };
+            gameState.player = { classeNome: "Vampiro", classeId: 6, vidamaxpla: 30, vidaatualpla: 30, atkpla: 3, danpla: 2, defpla: 14, tipdan: 4, critico: 20, energiamax: 16, energiaatual: 16, rd: 0, itensInventario: [] };
             gameState.vampiroPassiva = true;
             break;
     }
@@ -646,6 +646,7 @@ function finalizarTurnoPlayer() {
     gameState.tipoContraAtaque = 0;
 
     if (p.vidaatualpla <= 0) {
+        salvarPontuacao();
         document.getElementById('goTotalMortos').innerText = gameState.mortosTotais;
         document.getElementById('goTotalRodadas').innerText = gameState.rodada;
         document.getElementById('modalGameOver').classList.remove('hidden');
@@ -686,6 +687,7 @@ function abrirModalLoot() {
 
 function aplicarItemLoot(item) {
     item.efeito(gameState.player);
+    gameState.player.itensInventario.push(item.nome);
     logMsg(`🎁 Item Equipado: <b>${item.nome}</b> (${item.desc})`, 'system');
     document.getElementById('modalLoot').classList.add('hidden');
     atualizarTela();
@@ -717,6 +719,7 @@ function dropItemBoss() {
         
         card.onclick = () => {
             item.efeito(gameState.player);
+            gameState.player.itensInventario.push(item.nome);
             logMsg(`👑 Drop do Boss Equipado: <b>${item.nome}</b> (${item.desc})`, 'crit');
             document.getElementById('modalLoot').classList.add('hidden');
             atualizarTela();
@@ -845,4 +848,114 @@ function renderBadgesStatus(statusArray) {
         span.innerText = `${s.tipo} (${durTxt})`;
         container.appendChild(span);
     });
+}
+// --- SISTEMA DE LOGIN E CONTAS ---
+let currentUser = "";
+
+function registrar() {
+    let u = document.getElementById('inputUser').value.trim();
+    let p = document.getElementById('inputPass').value.trim();
+    if (!u || !p) return alert("Preencha usuário e senha!");
+    
+    let users = JSON.parse(localStorage.getItem('rpgUsers') || '{}');
+    if (users[u]) return alert("Este nome de usuário já existe!");
+    
+    users[u] = p;
+    localStorage.setItem('rpgUsers', JSON.stringify(users));
+    alert("Conta criada com sucesso! Você já pode entrar.");
+}
+
+function logar() {
+    let u = document.getElementById('inputUser').value.trim();
+    let p = document.getElementById('inputPass').value.trim();
+    if (!u || !p) return alert("Preencha usuário e senha!");
+    
+    let users = JSON.parse(localStorage.getItem('rpgUsers') || '{}');
+    if (users[u] === p) {
+        currentUser = u;
+        document.getElementById('telaLogin').classList.add('hidden');
+        document.getElementById('telaSelecaoClasse').classList.remove('hidden');
+    } else {
+        alert("Usuário ou senha incorretos!");
+    }
+}
+function salvarPontuacao() {
+    let placar = JSON.parse(localStorage.getItem('rpgPlacar') || '[]');
+    
+    placar.push({
+        user: currentUser,
+        classe: gameState.player.classeNome,
+        rodada: gameState.mortosTotais, // A rodada é definida pelos inimigos mortos
+        stats: {
+            hpMax: gameState.player.vidamaxpla,
+            atk: gameState.player.atkpla,
+            def: gameState.player.defpla
+        },
+        itens: gameState.player.itensInventario || []
+    });
+
+    // Ordena do maior pro menor (quem chegou mais longe)
+    placar.sort((a, b) => b.rodada - a.rodada);
+    localStorage.setItem('rpgPlacar', JSON.stringify(placar));
+}
+
+function abrirPlacar() {
+    const lista = document.getElementById('listaPlacar');
+    lista.innerHTML = '';
+    let placar = JSON.parse(localStorage.getItem('rpgPlacar') || '[]');
+
+    if (placar.length === 0) {
+        lista.innerHTML = '<p class="text-center text-slate-500 text-sm mt-4">Nenhuma pontuação registrada.</p>';
+    } else {
+        placar.forEach((run, index) => {
+            const div = document.createElement('div');
+            div.className = "bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-amber-500/50 cursor-pointer flex justify-between items-center transition";
+            div.onclick = () => mostrarDetalhesJogador(index);
+            
+            div.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <span class="text-amber-500 font-black text-lg">#${index + 1}</span>
+                    <div>
+                        <div class="font-bold text-slate-200">${run.user}</div>
+                        <div class="text-[10px] text-slate-500">${run.classe}</div>
+                    </div>
+                </div>
+                <div class="font-black text-indigo-400 text-xl">${run.rodada}</div>
+            `;
+            lista.appendChild(div);
+        });
+    }
+
+    document.getElementById('modalPlacar').classList.remove('hidden');
+}
+
+function fecharPlacar() {
+    document.getElementById('modalPlacar').classList.add('hidden');
+}
+
+function mostrarDetalhesJogador(index) {
+    let placar = JSON.parse(localStorage.getItem('rpgPlacar') || '[]');
+    let run = placar[index];
+
+    document.getElementById('detNome').innerText = run.user;
+    document.getElementById('detClasse').innerText = run.classe;
+    document.getElementById('detHp').innerText = run.stats.hpMax;
+    document.getElementById('detAtk').innerText = run.stats.atk;
+    document.getElementById('detDef').innerText = run.stats.def;
+
+    const divItens = document.getElementById('detItens');
+    divItens.innerHTML = '';
+    
+    if (!run.itens || run.itens.length === 0) {
+        divItens.innerHTML = '<span class="text-slate-500 text-xs">Nenhum item coletado.</span>';
+    } else {
+        run.itens.forEach(itemNome => {
+            const span = document.createElement('span');
+            span.className = "bg-slate-800 text-slate-300 text-[10px] px-2 py-1 rounded border border-slate-700";
+            span.innerText = itemNome;
+            divItens.appendChild(span);
+        });
+    }
+
+    document.getElementById('modalDetalhes').classList.remove('hidden');
 }
