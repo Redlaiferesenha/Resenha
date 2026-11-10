@@ -341,7 +341,7 @@ function verificarVitoriaInimigo() {
                     atkboss: Math.floor(bossModelo.atkbase * esc),
                     defboss: bossModelo.defbase,
                     danoss: Math.floor(bossModelo.danobase * esc),
-                    tipdanoboss: 2,
+                    tipdanboss: 2,
                     status: []
                 };
 
