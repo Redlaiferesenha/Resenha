@@ -3,22 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPG Masmorra - d20 Tactical Combat</title>
-    <!-- Tailwind CSS -->
+    <title>joguin resenha</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Nosso CSS Customizado -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="min-h-screen flex flex-col justify-between relative bg-slate-950">
 
-    <!-- Canvas de Efeitos de Partículas de Fundo -->
     <canvas id="bgCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
     <div class="relative z-10 flex-1 flex flex-col justify-between p-4 md:p-6 max-w-7xl mx-auto w-full">
 
-        <!-- HEADER DA ARENA (AMBIENTE & PROGRESSO) -->
         <header id="headerAmbiente" class="hidden mb-4 bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 shadow-xl backdrop-blur transition-all duration-500">
             <div class="flex flex-col md:flex-row justify-between items-center gap-3">
                 <div class="flex items-center gap-3">
@@ -42,11 +37,10 @@
             </div>
         </header>
 
-        <!-- SELEÇÃO DE CLASSE (TELA INITIAL) -->
         <section id="telaSelecaoClasse" class="my-auto py-8">
             <div class="text-center mb-8">
                 <h1 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-300 to-amber-500 tracking-wide uppercase mb-2">
-                    Masmorra d20 Tactical
+                    joguin resenha
                 </h1>
                 <p class="text-slate-400 max-w-xl mx-auto text-sm md:text-base">
                     Escolha sua classe inicial para adentrar as profundezas da masmorra.
@@ -54,7 +48,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                <!-- Card Neutro -->
                 <div onclick="selecionarClasse(1)" class="bg-slate-900/90 border border-slate-700 hover:border-amber-500/80 rounded-2xl p-5 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 flex flex-col justify-between group">
                     <div class="flex items-center gap-4 mb-4">
                         <img id="img-neutro" class="w-16 h-16 rounded-xl object-cover border-2 border-slate-600 group-hover:border-amber-400 transition" alt="Neutro">
@@ -71,7 +64,6 @@
                     <button class="w-full py-2 bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg border border-amber-500/40 transition">Selecionar Neutro</button>
                 </div>
 
-                <!-- Card Defensor -->
                 <div onclick="selecionarClasse(2)" class="bg-slate-900/90 border border-slate-700 hover:border-blue-500/80 rounded-2xl p-5 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-500/10 flex flex-col justify-between group">
                     <div class="flex items-center gap-4 mb-4">
                         <img id="img-defensor" class="w-16 h-16 rounded-xl object-cover border-2 border-slate-600 group-hover:border-blue-400 transition" alt="Defensor">
@@ -88,7 +80,6 @@
                     <button class="w-full py-2 bg-blue-500/20 hover:bg-blue-500 text-blue-300 hover:text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg border border-blue-500/40 transition">Selecionar Defensor</button>
                 </div>
 
-                <!-- Card Assassino -->
                 <div onclick="selecionarClasse(3)" class="bg-slate-900/90 border border-slate-700 hover:border-red-500/80 rounded-2xl p-5 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-red-500/10 flex flex-col justify-between group">
                     <div class="flex items-center gap-4 mb-4">
                         <img id="img-assassino" class="w-16 h-16 rounded-xl object-cover border-2 border-slate-600 group-hover:border-red-400 transition" alt="Assassino">
@@ -105,7 +96,6 @@
                     <button class="w-full py-2 bg-red-500/20 hover:bg-red-500 text-red-300 hover:text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg border border-red-500/40 transition">Selecionar Assassino</button>
                 </div>
 
-                <!-- Card Energético -->
                 <div onclick="selecionarClasse(4)" class="bg-slate-900/90 border border-slate-700 hover:border-purple-500/80 rounded-2xl p-5 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-purple-500/10 flex flex-col justify-between group">
                     <div class="flex items-center gap-4 mb-4">
                         <img id="img-energetico" class="w-16 h-16 rounded-xl object-cover border-2 border-slate-600 group-hover:border-purple-400 transition" alt="Energético">
@@ -122,7 +112,6 @@
                     <button class="w-full py-2 bg-purple-500/20 hover:bg-purple-500 text-purple-300 hover:text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg border border-purple-500/40 transition">Selecionar Energético</button>
                 </div>
 
-                <!-- Card Arqueiro -->
                 <div onclick="selecionarClasse(5)" class="bg-slate-900/90 border border-slate-700 hover:border-emerald-500/80 rounded-2xl p-5 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-500/10 flex flex-col justify-between group">
                     <div class="flex items-center gap-4 mb-4">
                         <img id="img-arqueiro" class="w-16 h-16 rounded-xl object-cover border-2 border-slate-600 group-hover:border-emerald-400 transition" alt="Arqueiro">
@@ -139,7 +128,6 @@
                     <button class="w-full py-2 bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg border border-emerald-500/40 transition">Selecionar Arqueiro</button>
                 </div>
 
-                <!-- Card Vampiro -->
                 <div onclick="selecionarClasse(6)" class="bg-slate-900/90 border border-slate-700 hover:border-rose-500/80 rounded-2xl p-5 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-rose-500/10 flex flex-col justify-between group">
                     <div class="flex items-center gap-4 mb-4">
                         <img id="img-vampiro" class="w-16 h-16 rounded-xl object-cover border-2 border-slate-600 group-hover:border-rose-400 transition" alt="Vampiro">
@@ -158,13 +146,10 @@
             </div>
         </section>
 
-        <!-- MAIN ARENA DE COMBATE -->
         <main id="telaCombate" class="hidden flex-1 flex flex-col justify-between gap-4">
             
-            <!-- PAINEL DOS COMBATENTES (PLAYER VS INIMIGO) -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
-                <!-- CARD HEROI -->
                 <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur relative overflow-hidden">
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-3">
@@ -176,7 +161,6 @@
                         </div>
                     </div>
 
-                    <!-- Variavel de Status HP & Energia -->
                     <div class="space-y-2 mb-4">
                         <div>
                             <div class="flex justify-between text-xs font-semibold mb-1">
@@ -199,7 +183,6 @@
                         </div>
                     </div>
 
-                    <!-- Atributos Grade -->
                     <div class="grid grid-cols-6 gap-1 text-center bg-slate-950/70 p-2 rounded-xl border border-slate-800/80 text-[11px]">
                         <div>
                             <div class="text-slate-400 uppercase">Atk</div>
@@ -228,7 +211,6 @@
                     </div>
                 </div>
 
-                <!-- CARD INIMIGO / BOSS -->
                 <div id="cardInimigoContainer" class="bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur relative overflow-hidden transition-all duration-300">
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-3">
@@ -240,7 +222,6 @@
                         </div>
                     </div>
 
-                    <!-- Barra de Vida Inimigo -->
                     <div class="space-y-2 mb-4">
                         <div>
                             <div class="flex justify-between text-xs font-semibold mb-1">
@@ -253,7 +234,6 @@
                         </div>
                     </div>
 
-                    <!-- Status Ativos do Inimigo -->
                     <div class="mb-3">
                         <div class="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1">Efeitos Ativos:</div>
                         <div id="containerStatusInimigo" class="flex flex-wrap gap-1.5 min-h-[26px]">
@@ -261,7 +241,6 @@
                         </div>
                     </div>
 
-                    <!-- Atributos Inimigo Grade -->
                     <div class="grid grid-cols-4 gap-1 text-center bg-slate-950/70 p-2 rounded-xl border border-slate-800/80 text-[11px]">
                         <div>
                             <div class="text-slate-400 uppercase">Defesa</div>
@@ -284,15 +263,12 @@
 
             </div>
 
-            <!-- PAINEL INFERIOR (AÇÕES FIXAS E LOG ROLÁVEL) -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
                 
-                <!-- PAINEL DE BOTÕES DE AÇÃO (ALTURA E POSIÇÃO RÍGIDAS FIXAS) -->
                 <div class="lg:col-span-6 bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur flex flex-col justify-between h-80">
                     <h3 class="text-xs uppercase font-bold tracking-wider text-slate-400 font-cinzel">Ações de Combate</h3>
                     
                     <div class="grid grid-cols-2 gap-3 my-auto">
-                        <!-- Atacar -->
                         <button onclick="acaoAtacar()" class="group relative bg-gradient-to-br from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white p-3.5 rounded-xl border border-red-400/30 font-bold transition-all shadow-lg hover:shadow-red-500/20 active:scale-95 text-left flex items-center gap-3">
                             <span class="text-2xl group-hover:scale-110 transition">⚔️</span>
                             <div>
@@ -301,7 +277,6 @@
                             </div>
                         </button>
 
-                        <!-- Contra-Atacar -->
                         <button onclick="acaoContraAtacar()" class="group relative bg-gradient-to-br from-slate-800 to-slate-700 hover:from-slate-700 hover:to-slate-600 text-slate-100 p-3.5 rounded-xl border border-slate-500/30 font-bold transition-all shadow-lg hover:shadow-slate-500/20 active:scale-95 text-left flex items-center gap-3">
                             <span class="text-2xl group-hover:scale-110 transition">🛡️</span>
                             <div>
@@ -310,7 +285,6 @@
                             </div>
                         </button>
 
-                        <!-- Habilidades -->
                         <button onclick="abrirModalHabilidades()" class="group relative bg-gradient-to-br from-purple-600 to-indigo-700 hover:from-purple-500 hover:to-indigo-600 text-white p-3.5 rounded-xl border border-purple-400/30 font-bold transition-all shadow-lg hover:shadow-purple-500/20 active:scale-95 text-left flex items-center gap-3">
                             <span class="text-2xl group-hover:scale-110 transition">✨</span>
                             <div>
@@ -319,7 +293,6 @@
                             </div>
                         </button>
 
-                        <!-- Descansar -->
                         <button onclick="acaoDescansar()" class="group relative bg-gradient-to-br from-emerald-700 to-teal-800 hover:from-emerald-600 hover:to-teal-700 text-white p-3.5 rounded-xl border border-emerald-400/30 font-bold transition-all shadow-lg hover:shadow-emerald-500/20 active:scale-95 text-left flex items-center gap-3">
                             <span class="text-2xl group-hover:scale-110 transition">💤</span>
                             <div>
@@ -334,7 +307,6 @@
                     </div>
                 </div>
 
-                <!-- LOG DE BATALLA (ALTURA FIXA COM SCROLL INTERNO) -->
                 <div class="lg:col-span-6 bg-slate-900/90 border border-slate-700 rounded-2xl p-4 shadow-xl backdrop-blur flex flex-col justify-between h-80">
                     <div class="flex justify-between items-center mb-2 pb-2 border-b border-slate-800">
                         <h3 class="text-xs uppercase font-bold tracking-wider text-slate-400 font-cinzel flex items-center gap-2">
@@ -353,7 +325,6 @@
         </main>
     </div>
 
-    <!-- MODAL DE HABILIDADES -->
     <div id="modalHabilidades" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full p-6 shadow-2xl relative max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center pb-4 border-b border-slate-800 mb-4">
@@ -365,24 +336,23 @@
             </div>
 
             <div id="containerHabilidadesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3 overflow-y-auto flex-1 pr-2">
-                <!-- As 8 Habilidades são geradas dinamicamente -->
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE LOOT / DROP DE ITENS -->
+    
     <div id="modalLoot" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-amber-500/50 rounded-2xl max-w-3xl w-full p-6 shadow-2xl text-center relative">
             <h2 class="text-2xl font-black text-amber-400 font-cinzel mb-1">VICTÓRIA! ESCOLHA SEU ITEM</h2>
             <p class="text-xs text-slate-300 mb-6">Selecione uma das recompensas abaixo para fortalecer seu herói:</p>
 
             <div id="cardsLootContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <!-- Inserido dinamicamente via JS -->
+                
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE MORTE / GAME OVER -->
+    
     <div id="modalGameOver" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-red-600 rounded-2xl max-w-md w-full p-6 shadow-2xl text-center">
             <div class="text-5xl mb-3">💀</div>
@@ -398,7 +368,7 @@
         </div>
     </div>
 
-    <!-- Nossos Scripts de Lógica e Dados -->
+    
     <script src="js/data.js"></script>
     <script src="js/game.js"></script>
 </body>
