@@ -1,4 +1,4 @@
-// IMAGENS DAS CLASSES
+
 const CLASS_IMAGES = {
     neutro: "imagens/neutro.png",
     defensor: "imagens/defensor.jpg",
@@ -8,7 +8,7 @@ const CLASS_IMAGES = {
     vampiro: "imagens/vampiro.jpg"
 };
 
-// ESTADO GLOBAL DO JOGO
+
 let gameState = {
     rodada: 1,
     mortosNormais: 0,
@@ -18,7 +18,7 @@ let gameState = {
     bossAtivo: false,
     tipoContraAtaque: 0, // 0: Nenhum, 1: Normal, 2: Especial (Duplo)
     
-    // Atributos de feitiço modificáveis por itens
+    
     danchama: 2,
     redconge: 2,
     danven: 5,
@@ -26,7 +26,7 @@ let gameState = {
     rodormin: 4,
     vampiroPassiva: false,
 
-    // Player State
+    
     player: {
         classeNome: "Neutro",
         classeId: 1,
@@ -42,7 +42,6 @@ let gameState = {
         rd: 0
     },
 
-    // Inimigo Ativo
     inimigo: {
         nome: "Goblin Nível 1",
         vidamaxini: 25,
@@ -54,7 +53,6 @@ let gameState = {
         status: []
     },
 
-    // Boss Ativo
     boss: {
         nome: "SENHOR DAS SOMBRAS",
         vidamax: 50,
@@ -67,7 +65,6 @@ let gameState = {
     }
 };
 
-// DADOS E RENDERIZAÇÃO DAS HABILIDADES
 const LISTA_HABILIDADES = [
     { id: 1, nome: "1. Ataque Aprimorado", icone: "⚔️", custo: 3, desc: "Bônus de +2 no teste d20 e +1 de dano no golpe.", cor: "text-purple-300" },
     { id: 2, nome: "2. Contra-Ataque Especial", icone: "🛡️", custo: 4, desc: "Caso o inimigo erre o ataque nesta rodada, ataca 2 vezes em resposta!", cor: "text-purple-300" },
@@ -79,7 +76,6 @@ const LISTA_HABILIDADES = [
     { id: 8, nome: "8. Sangramento", icone: "🩸", custo: 8, desc: "Aplica sangramento por 7 rodadas (Ativa passiva do Vampiro!).", cor: "text-rose-400" }
 ];
 
-// SISTEMA DE RECOMPENSAS / LOOT
 const CATALOGO_ITENS = [
     { id: 1, nome: "Óculos de Aventureiro", desc: "+2 Bônus de Ataque", efeito: (p) => p.atkpla += 2 },
     { id: 2, nome: "Colete à Prova de Balas", desc: "+2 Bônus de Defesa", efeito: (p) => p.defpla += 2 },
