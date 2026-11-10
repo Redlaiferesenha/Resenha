@@ -180,28 +180,32 @@ function limparLog() {
     document.getElementById('combatLog').innerHTML = '';
 }
 
-function aplicarEfeitoAmbiente(amb, player, ini, boss, isBoss) {
+function aplicarEfeitoAmbiente(amb, player, ini, boss, isBoss, apenasInimigo = false) {
     const target = isBoss ? boss : ini;
     switch(amb) {
         case 1: 
-            player.defpla += 2;
+            if (!apenasInimigo) player.defpla += 2;
             if(isBoss) target.atkboss -= 2; else target.atkini -= 2;
             break;
         case 2: 
-            player.energiamax -= 2;
-            if (player.energiaatual > player.energiamax) player.energiaatual = player.energiamax;
+            if (!apenasInimigo) {
+                player.energiamax -= 2;
+                if (player.energiaatual > player.energiamax) player.energiaatual = player.energiamax;
+                gameState.redconge += 1;
+            }
             if(isBoss) target.defboss -= 2; else target.defini -= 2;
-            gameState.redconge += 1;
             break;
         case 3: 
-            player.atkpla -= 2;
+            if (!apenasInimigo) player.atkpla -= 2;
             if(isBoss) { target.atkboss -= 2; target.defboss += 1; } 
             else { target.atkini -= 2; target.defini += 1; }
             break;
         case 4: 
-            player.atkpla += 3;
+            if (!apenasInimigo) {
+                player.atkpla += 3;
+                gameState.danchama += 2;
+            }
             if(isBoss) target.atkboss += 3; else target.atkini += 3;
-            gameState.danchama += 2;
             break;
     }
 }
@@ -721,7 +725,7 @@ function atualizarTela() {
 
     setTexto('attrPlayerAtk', formatarModificador(p.atkpla));
     setTexto('attrPlayerDano', formatarModificador(p.danpla));
-    setTexto('attrPlayerDef', formatarModificador(p.defpla));
+    setTexto('attrPlayerDef', p.defpla);
     setTexto('attrPlayerRD', p.rd);
     setTexto('attrPlayerDado', `1d${p.tipdan}`);
     setTexto('attrPlayerCrit', p.critico);
@@ -743,7 +747,7 @@ function atualizarTela() {
 
         setTexto('attrInimigoAtk', formatarModificador(boss.atkboss));
         setTexto('attrInimigoDano', formatarModificador(boss.danoss));
-        setTexto('attrInimigoDef', formatarModificador(boss.defboss));
+        setTexto('attrInimigoDef', boss.defboss);
         setTexto('attrInimigoDado', `1d${boss.tipdanboss}`);
         
         if (typeof renderBadgesStatus === 'function') renderBadgesStatus(boss.status || []);
@@ -762,7 +766,7 @@ function atualizarTela() {
 
         setTexto('attrInimigoAtk', formatarModificador(ini.atkini));
         setTexto('attrInimigoDano', formatarModificador(ini.danini));
-        setTexto('attrInimigoDef', formatarModificador(ini.defini));
+        setTexto('attrInimigoDef', ini.defini);
         setTexto('attrInimigoDado', `1d${ini.tipdanini}`);
         
         if (typeof renderBadgesStatus === 'function') renderBadgesStatus(ini.status || []);
