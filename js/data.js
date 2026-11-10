@@ -1,4 +1,3 @@
-
 const CLASS_IMAGES = {
     neutro: "imagens/imagensperso/neutro.png",
     defensor: "imagens/imagensperso/defensor.jpg",
@@ -44,6 +43,7 @@ let gameState = {
 
     inimigo: {
         nome: "Goblin Nível 1",
+        imagem: "imagens/imagensini/goblin.png",
         vidamaxini: 25,
         vidatualini: 25,
         atkini: 2,
