@@ -156,7 +156,7 @@ function selecionarClasse(op) {
     
     gerarNovoAmbiente();
     document.getElementById('telaSelecaoClasse').classList.add('hidden');
-    document.getElementById('telaBatalha').classList.remove('hidden');
+    document.getElementById('telaJogo').classList.remove('hidden');
     atualizarTela();
 }
 
@@ -937,11 +937,13 @@ function mostrarDetalhesJogador(index) {
     let placar = JSON.parse(localStorage.getItem('rpgPlacar') || '[]');
     let run = placar[index];
 
-    document.getElementById('detHp').innerText = `${run.stats.hpAtual}/${run.stats.hpMax}`;
-    document.getElementById('detEnergia').innerText = `${run.stats.energiaAtual}/${run.stats.energiaMax}`;
-    document.getElementById('detAtk').innerText = run.stats.atk;
-    document.getElementById('detDano').innerText = run.stats.dano;
-    document.getElementById('detDef').innerText = run.stats.def;
+    document.getElementById('detNome').innerText = run.user;
+    document.getElementById('detClasse').innerText = run.classe;
+    document.getElementById('detHp').innerText = `${run.stats.vidaatualpla}/${run.stats.vidamaxpla}`;
+    document.getElementById('detEnergia').innerText = `${run.stats.energiaatual}/${run.stats.energiamax}`;
+    document.getElementById('detAtk').innerText = run.stats.atkpla;
+    document.getElementById('detDano').innerText = run.stats.danpla;
+    document.getElementById('detDef').innerText = run.stats.defpla;
     document.getElementById('detRd').innerText = run.stats.rd;
     document.getElementById('detTipDan').innerText = `d${run.stats.tipdan}`;
     document.getElementById('detCrit').innerText = run.stats.critico;
