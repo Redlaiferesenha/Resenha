@@ -253,6 +253,10 @@ function gerarNovoAmbiente() {
     document.getElementById('ambienteNome').innerText = `Ambiente: ${nomes[novoAmb]}`;
     document.getElementById('ambienteDesc').innerText = descs[novoAmb];
     document.getElementById('ambienteIcone').innerText = icones[novoAmb];
+    const bgElem = document.getElementById('bgAmbiente');
+    if (bgElem && AMBIENTE_IMAGES[novoAmb]) {
+        bgElem.style.backgroundImage = `url('${AMBIENTE_IMAGES[novoAmb]}')`;
+    }
     logMsg(`🌎 <b>O AMBIENTE MUDOU:</b> ${nomes[novoAmb]} - ${descs[novoAmb]}`, 'system');
 }
 
