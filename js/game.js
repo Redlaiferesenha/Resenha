@@ -323,6 +323,7 @@ function verificarVitoriaInimigo() {
             gameState.bossAtivo = true;
             gameState.boss.vidatual = gameState.boss.vidamax;
             aplicarEfeitoAmbiente(gameState.ambienteAtual, gameState.player, gameState.inimigo, gameState.boss, true);
+            limparLog();
             logMsg(`⚠️ <b>UM BOSS PODEROSO APARECEU!</b>`, 'crit');
         } else {
             spawnNovoInimigo();
@@ -349,6 +350,8 @@ function verificarVitoriaInimigo() {
 }
 
 function spawnNovoInimigo() {
+    limparLog();
+    
     gameState.inimigo.vidamaxini += Math.floor(gameState.inimigo.vidamaxini * 0.15);
     gameState.inimigo.vidatualini = gameState.inimigo.vidamaxini;
 
