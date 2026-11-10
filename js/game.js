@@ -650,16 +650,16 @@ function abrirModalLoot() {
 
     escolhidos.forEach(item => {
         const card = document.createElement('div');
-        card.className = "bg-slate-950 border border-slate-800 hover:border-amber-400 p-4 rounded-xl cursor-pointer transition flex flex-col justify-between group";
+        card.className = "bg-slate-950 border border-slate-800 hover:border-amber-400 p-4 rounded-xl cursor-pointer transition flex flex-col justify-between group text-center";
         card.onclick = () => aplicarItemLoot(item);
 
         card.innerHTML = `
             <div>
-                <div class="text-3xl mb-2 group-hover:scale-110 transition">🎁</div>
+                <img src="${item.img}" class="w-16 h-16 object-cover rounded-xl mx-auto mb-3 border border-amber-500/30 group-hover:scale-105 transition bg-slate-900 shadow-md" alt="${item.nome}">
                 <h4 class="font-bold text-amber-400 text-sm mb-1">${item.nome}</h4>
                 <p class="text-xs text-slate-400">${item.desc}</p>
             </div>
-            <button class="mt-4 py-1.5 bg-amber-500/20 text-amber-300 font-bold text-xs rounded border border-amber-500/40">Equipar</button>
+            <button class="mt-4 py-1.5 bg-amber-500/20 text-amber-300 font-bold text-xs rounded border border-amber-500/40 group-hover:bg-amber-500 group-hover:text-slate-950 transition">Equipar</button>
         `;
         container.appendChild(card);
     });
@@ -677,13 +677,13 @@ function dropItemBoss() {
     let val = Math.floor(Math.random() * 2) + 1;
     const p = gameState.player;
     if (val === 1) {
-        logMsg(`👑 Drop do Boss: <b>Máscara de Lobo!</b> (+4 Max HP, +4 Atk, -2 Defesa)`, 'crit');
+        logMsg(`👑 Drop do Boss: <img src="imagens/imagensitem/mascaralobo.png" class="inline-block w-6 h-6 rounded mx-1 align-middle"> <b>Máscara de Lobo!</b> (+4 Max HP, +4 Atk, -2 Defesa)`, 'crit');
         p.vidamaxpla += 4;
         curarPlayer(4);
         p.atkpla += 4;
         p.defpla -= 2;
     } else {
-        logMsg(`👑 Drop do Boss: <b>Livro Endiabrado!</b> (+3 Atk, +3 Dano, Perde 25% HP)`, 'crit');
+        logMsg(`👑 Drop do Boss: <img src="imagens/imagensitem/livroendiabrado.png" class="inline-block w-6 h-6 rounded mx-1 align-middle"> <b>Livro Endiabrado!</b> (+3 Atk, +3 Dano, Perde 25% HP)`, 'crit');
         p.atkpla += 3;
         p.danpla += 3;
         p.vidaatualpla = Math.floor(p.vidaatualpla * 0.75);
