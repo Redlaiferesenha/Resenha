@@ -1,10 +1,28 @@
+let currentUser = "";
+let dadosPlacarOnline = [];
+
+function deslogar() {
+    localStorage.removeItem('usuarioLogado');
+    currentUser = "";
+
+    document.getElementById('telaSelecaoClasse').classList.add('hidden');
+    document.getElementById('telaLogin').classList.remove('hidden');
+
+    const inputU = document.getElementById('inputUser');
+    const inputP = document.getElementById('inputPass');
+    if (inputU) inputU.value = '';
+    if (inputP) inputP.value = '';
+}
 window.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('img-neutro').src = CLASS_IMAGES.neutro;
-    document.getElementById('img-defensor').src = CLASS_IMAGES.defensor;
-    document.getElementById('img-assassino').src = CLASS_IMAGES.assassino;
-    document.getElementById('img-energetico').src = CLASS_IMAGES.energetico;
-    document.getElementById('img-arqueiro').src = CLASS_IMAGES.arqueiro;
-    document.getElementById('img-vampiro').src = CLASS_IMAGES.vampiro;
+    if (typeof CLASS_IMAGES !== 'undefined') {
+        if (document.getElementById('img-neutro')) document.getElementById('img-neutro').src = CLASS_IMAGES.neutro;
+        if (document.getElementById('img-defensor')) document.getElementById('img-defensor').src = CLASS_IMAGES.defensor;
+        if (document.getElementById('img-assassino')) document.getElementById('img-assassino').src = CLASS_IMAGES.assassino;
+        if (document.getElementById('img-energetico')) document.getElementById('img-energetico').src = CLASS_IMAGES.energetico;
+        if (document.getElementById('img-arqueiro')) document.getElementById('img-arqueiro').src = CLASS_IMAGES.arqueiro;
+        if (document.getElementById('img-vampiro')) document.getElementById('img-vampiro').src = CLASS_IMAGES.vampiro;
+    }
+
     let usuarioSalvo = localStorage.getItem('usuarioLogado');
     if (usuarioSalvo) {
         currentUser = usuarioSalvo;
@@ -12,19 +30,6 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('telaSelecaoClasse').classList.remove('hidden');
     }
 });
-function deslogar() {
-    // Remove o usuário salvo no navegador
-    localStorage.removeItem('usuarioLogado');
-    currentUser = "";
-
-    // Oculta a tela de seleção de classe e exibe a tela de login
-    document.getElementById('telaSelecaoClasse').classList.add('hidden');
-    document.getElementById('telaLogin').classList.remove('hidden');
-
-    // Limpa os campos de entrada de texto
-    document.getElementById('inputUser').value = '';
-    document.getElementById('inputPass').value = '';
-}
 const firebaseConfig = {
     apiKey: "AIzaSyDodcLJZkIAyrIvNWmWsgLjdeR0zgYOlRQ",
     authDomain: "joguin-resenha.firebaseapp.com",
@@ -37,9 +42,11 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+
 function formatarModificador(val) {
     return val >= 0 ? `+${val}` : `${val}`;
 }
+
 const AudioSys = {
     ctx: null,
     init() {
@@ -121,11 +128,11 @@ class Particle {
         }
     }
     draw() {
-        let color = "rgba(245, 158, 11, "; // Vulcão (laranja)
-        if (gameState.ambienteAtual === 1) color = "rgba(34, 197, 94, "; // Floresta (verde)
-        if (gameState.ambienteAtual === 2) color = "rgba(56, 189, 248, "; // Glacial (azul)
-        if (gameState.ambienteAtual === 3) color = "rgba(163, 230, 53, "; // Pantano (lima/toxico)
-        if (gameState.ambienteAtual === 0) color = "rgba(148, 163, 184, "; // Neutro (cinza)
+        let color = "rgba(245, 158, 11, ";
+        if (gameState.ambienteAtual === 1) color = "rgba(34, 197, 94, ";
+        if (gameState.ambienteAtual === 2) color = "rgba(56, 189, 248, ";
+        if (gameState.ambienteAtual === 3) color = "rgba(163, 230, 53, ";
+        if (gameState.ambienteAtual === 0) color = "rgba(148, 163, 184, ";
 
         ctx.fillStyle = color + this.alpha + ")";
         ctx.beginPath();
