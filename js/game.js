@@ -353,15 +353,27 @@ function limparStatus(target, isBoss) {
 }
 
 function verificarVitoriaInimigo() {
+    // Helper local para aplicar o Pote Guloso
+    const aplicarPoteGuloso = () => {
+        gameState.saquesRestantes = gameState.potegulosoAtivo ? 2 : 1;
+        if (gameState.potegulosoAtivo) {
+            gameState.potegulosoAtivo = false;
+            const idx = gameState.player.itensInventario.findIndex(i => i.nome === "Pote Guloso");
+            if (idx > -1) gameState.player.itensInventario.splice(idx, 1);
+        }
+    };
+
     if (gameState.bossAtivo) {
         if (gameState.boss.vidatual <= 0) {
             logMsg(`🏆 <b>VOCÊ DERROTOU O BOSS ${gameState.boss.nome}!</b>`, 'crit');
             gameState.bossAtivo = false;
             gameState.mortosTotais++;
+            
+            aplicarPoteGuloso();
             dropItemBoss();
             
             gameState.inimigosParaAmbiente++;
-            if(gameState.inimigosParaAmbiente >= 2) {
+            if (gameState.inimigosParaAmbiente >= 2) {
                 gameState.inimigosParaAmbiente = 0;
                 gerarNovoAmbiente();
             }
@@ -377,12 +389,14 @@ function verificarVitoriaInimigo() {
             gameState.mortosNormais++;
             
             gameState.inimigosParaAmbiente++;
-            if(gameState.inimigosParaAmbiente >= 2) {
+            if (gameState.inimigosParaAmbiente >= 2) {
                 gameState.inimigosParaAmbiente = 0;
                 gerarNovoAmbiente();
             }
 
+            aplicarPoteGuloso();
             abrirModalLoot();
+
             if (gameState.mortosNormais > 0 && gameState.mortosNormais % 4 === 0) {
                 gameState.bossAtivo = true;
                 
@@ -391,7 +405,6 @@ function verificarVitoriaInimigo() {
                 const esc = 1 + (mortosParaBoss * 0.08);
                 
                 const danoBrutoBoss = bossModelo.danobase * esc;
-                
                 let bonusBoss = Math.floor(danoBrutoBoss * 0.3) + 1;
                 let dadoBoss = Math.floor(danoBrutoBoss * 0.7) + 2;
                 
@@ -476,11 +489,15 @@ function acaoAtacar() {
         
         if (gameState.bossAtivo) gameState.boss.vidatual -= dano;
         else gameState.inimigo.vidatualini -= dano;
-
-        if (vampiroAtivo) {
-            let cura = Math.floor(dano / 2);
+        
+        let pctCura = 0;
+        if (vampiroAtivo) pctCura += 0.5; // +50% da Passiva vs Sangramento
+        if (gameState.calviceVampiricaAtiva) pctCura += 0.6; // +60% do Item
+        
+        if (pctCura > 0) {
+            let cura = Math.floor(dano * pctCura);
             curarPlayer(cura);
-            logMsg(`🩸 Passiva Vampiro: Curou +${cura} de HP!`, 'player');
+            logMsg(`🩸 Roubo de Vida (${Math.round(pctCura * 100)}%): Curou +${cura} de HP!`, 'player');
         }
     } else {
         logMsg(`❌ Você errou o ataque! (Rolou d20: ${d20} + ${p.atkpla} = ${teste} vs DEF: ${targetDef})`, 'normal');
@@ -533,10 +550,14 @@ function executarContraAtaque(vezes = 1) {
                 if (gameState.inimigo.vidatualini < 0) gameState.inimigo.vidatualini = 0;
             }
 
-            if (vampiroAtivo) {
-                let cura = Math.floor(dano / 2);
+            let pctCura = 0;
+            if (vampiroAtivo) pctCura += 0.5; // +50% da Passiva vs Sangramento
+            if (gameState.calviceVampiricaAtiva) pctCura += 0.6; // +60% do Item
+            
+            if (pctCura > 0) {
+                let cura = Math.floor(dano * pctCura);
                 curarPlayer(cura);
-                logMsg(`🩸 Passiva Vampiro: Curou +${cura} HP!`, 'player');
+                logMsg(`🩸 Roubo de Vida (${Math.round(pctCura * 100)}%): Curou +${cura} de HP!`, 'player');
             }
         } else {
             logMsg(`❌ O seu Contra-Ataque falhou. (Teste: ${teste} vs DEF: ${targetDef})`, 'normal');
@@ -702,12 +723,19 @@ async function finalizarTurnoPlayer() {
     gameState.tipoContraAtaque = 0;
 
     if (p.vidaatualpla <= 0) {
+        if (gameState.auraMonstroAtiva) {
+            p.vidaatualpla = p.vidamaxpla;
+            gameState.auraMonstroAtiva = false;
+            let idx = p.itensInventario.findIndex(i => i.nome === "Aura do Monstro");
+            if (idx > -1) p.itensInventario.splice(idx, 1); // Consome o item
+            
+            logMsg(`🌟 <b>AURA DO MONSTRO!</b> Você retornou atraves da morte!`, 'crit');
+            atualizarTela();
+            return;
+        }
+
         await salvarPontuacao();
         document.getElementById('goTotalMortos').innerText = gameState.mortosTotais;
-        document.getElementById('goTotalRodadas').innerText = gameState.rodada;
-        document.getElementById('modalGameOver').classList.remove('hidden');
-        return;
-    }
 
     gameState.rodada++;
     atualizarTela();
@@ -745,6 +773,14 @@ function aplicarItemLoot(item) {
     item.efeito(gameState.player);
     gameState.player.itensInventario.push({ nome: item.nome, img: item.img });
     logMsg(`🎁 Item Equipado: <b>${item.nome}</b> (${item.desc})`, 'system');
+    
+    gameState.saquesRestantes--;
+    if (gameState.saquesRestantes > 0) {
+        logMsg(`🍽️ <b>Pote Guloso:</b> Você pode escolher mais 1 item!`, 'system');
+        abrirModalLoot(); // Abre novamente com novos itens
+        return;
+    }
+
     document.getElementById('modalLoot').classList.add('hidden');
     atualizarTela();
 }
@@ -765,10 +801,17 @@ function dropItemBoss() {
         card.className = "bg-slate-950 border border-red-800 hover:border-red-500 p-4 rounded-xl cursor-pointer transition flex flex-col justify-between group text-center shadow-lg hover:shadow-red-500/20";
         
         card.onclick = () => {
-            // Executa o efeito puxando da estrutura do catálogo
             item.efeito(gameState.player);
             gameState.player.itensInventario.push({ nome: item.nome, img: item.img });
             logMsg(`👑 Drop do Boss Equipado: <b>${item.nome}</b> (${item.desc})`, 'crit');
+            
+            gameState.saquesRestantes--;
+            if (gameState.saquesRestantes > 0) {
+                logMsg(`🍽️ <b>Pote Guloso:</b> Você pode escolher mais 1 item de boss!`, 'system');
+                card.remove(); // Remove apenas o card escolhido da tela
+                return;
+            }
+        
             document.getElementById('modalLoot').classList.add('hidden');
             atualizarTela();
         };
