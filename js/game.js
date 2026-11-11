@@ -630,10 +630,10 @@ function usarHabilidade(op) {
     fecharModalHabilidades();
 
     switch(op) {
-        case 1:
+        case 1: 
             let d20 = Math.floor(Math.random() * 20) + 1;
-            let teste = d20 + p.atkpla + 2;
-            let dano = Math.floor(Math.random() * p.tipdan) + 1 + p.danpla + 1;
+            let teste = d20 + p.atkpla + gameState.habAtkBonus;
+            let dano = Math.floor(Math.random() * p.tipdan) + 1 + p.danpla + gameState.habDanoBonus;
             let targetDef = isBoss ? target.defboss : target.defini;
             if (teste >= targetDef) {
                 logMsg(`✨ <b>Ataque Aprimorado acertou!</b> Causou ${dano} de dano.`, 'spell');
@@ -644,9 +644,9 @@ function usarHabilidade(op) {
             logMsg(`🛡️ <b>Postura de Contra-Ataque Especial ativada!</b> (Reage com 2x ataques)`, 'spell');
             gameState.tipoContraAtaque = 2;
             break;
-        case 3:
-            curarPlayer(6);
-            logMsg(`💚 <b>Feitiço de Cura!</b> Restaurou +6 de Vida.`, 'player');
+        case 3: 
+            curarPlayer(gameState.habCuraValor);
+            logMsg(`💚 <b>Feitiço de Cura!</b> Restaurou +${gameState.habCuraValor} de Vida.`, 'player');
             break;
         case 4:
             if (!temStatus(target.status, 'Chamas')) {
