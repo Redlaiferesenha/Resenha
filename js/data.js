@@ -120,5 +120,5 @@ const BESTIARIO_BOSSES = [
     { nome: "SENHOR DAS SOMBRAS", img: "imagens/imagensini/senhor das sombras.png", vidabase: 60, atkbase: 6, defbase: 14, danobase: 10 },
     { nome: "REI GOBLIN", img: "imagens/imagensini/reigoblin.png", vidabase: 50, atkbase: 5, defbase: 13, danobase: 9 },
     { nome: "LICH SUPREMO", img: "imagens/imagensini/lichsupremo.png", vidabase: 55, atkbase: 7, defbase: 12, danobase: 12 },
-    { nome: "DRAGÃO ANCIÃO", img: "imagens/imagensini/dragãoanciao.png", vidabase: 80, atkbase: 8, defbase: 15, danobase: 15 }
+    { nome: "DRAGÃO ANCIÃO", img: "imagens/imagensini/dragãoanciao.png", vidabase: 80, atkbase: 8, defbase: 10, danobase: 15 }
 ];
