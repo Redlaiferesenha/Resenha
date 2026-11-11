@@ -33,6 +33,10 @@ const CATALOGO_ITENS = [
     { id: 15, nome: "Dente Falso de Vampiro", img: "imagens/imagensitem/dentefalso.png", desc: "+1 Dano de Sangramento", efeito: () => gameState.dansang += 1 }
 ];
 
+const CATALOGO_ITENS_BOSS = [
+    { id: 1, nome: "Máscara de Lobo", img: "imagens/imagensitem/mascaralobo.png", desc: "+4 Max HP, +4 Atk, -2 Def (Cura 4 HP)", efeito: (p) => { p.vidamaxpla += 4; curarPlayer(4); p.atkpla += 4; p.defpla -= 2; } },
+    { id: 2, nome: "Livro Endiabrado", img: "imagens/imagensitem/livroendiabrado.png", desc: "+3 Atk, +3 Dano. Perca 25% do HP atual", efeito: (p) => { p.atkpla += 3; p.danpla += 3; p.vidaatualpla = Math.floor(p.vidaatualpla * 0.75); } }
+];
 let gameState = {
     rodada: 1,
     mortosNormais: 0,
