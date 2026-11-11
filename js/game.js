@@ -1,3 +1,15 @@
+const firebaseConfig = {
+    apiKey: "AIzaSyDodcLJZkIAyrIvNWmWsgLjdeR0zgYOlRQ",
+    authDomain: "joguin-resenha.firebaseapp.com",
+    projectId: "joguin-resenha",
+    storageBucket: "joguin-resenha.firebasestorage.app",
+    messagingSenderId: "209192133693",
+    appId: "1:209192133693:web:e77d9c08341522556a7654",
+    measurementId: "G-NZS4NP1ZH1"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 function formatarModificador(val) {
     return val >= 0 ? `+${val}` : `${val}`;
 }
