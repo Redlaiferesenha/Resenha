@@ -1,3 +1,6 @@
+// ==========================================
+// 1. VARIÁVEIS GLOBAIS E LOGOUT
+// ==========================================
 let currentUser = "";
 let dadosPlacarOnline = [];
 
@@ -13,6 +16,26 @@ function deslogar() {
     if (inputU) inputU.value = '';
     if (inputP) inputP.value = '';
 }
+
+// ==========================================
+// 2. CONFIGURAÇÃO E INICIALIZAÇÃO FIREBASE
+// ==========================================
+const firebaseConfig = {
+    apiKey: "AIzaSyDodcLJZkIAyrIvNWmWsgLjdeR0zgYOlRQ",
+    authDomain: "joguin-resenha.firebaseapp.com",
+    projectId: "joguin-resenha",
+    storageBucket: "joguin-resenha.firebasestorage.app",
+    messagingSenderId: "209192133693",
+    appId: "1:209192133693:web:e77d9c08341522556a7654",
+    measurementId: "G-NZS4NP1ZH1"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ==========================================
+// 3. CARREGAMENTO DO DOM (ÚNICO)
+// ==========================================
 window.addEventListener('DOMContentLoaded', () => {
     if (typeof CLASS_IMAGES !== 'undefined') {
         if (document.getElementById('img-neutro')) document.getElementById('img-neutro').src = CLASS_IMAGES.neutro;
@@ -30,18 +53,6 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('telaSelecaoClasse').classList.remove('hidden');
     }
 });
-const firebaseConfig = {
-    apiKey: "AIzaSyDodcLJZkIAyrIvNWmWsgLjdeR0zgYOlRQ",
-    authDomain: "joguin-resenha.firebaseapp.com",
-    projectId: "joguin-resenha",
-    storageBucket: "joguin-resenha.firebasestorage.app",
-    messagingSenderId: "209192133693",
-    appId: "1:209192133693:web:e77d9c08341522556a7654",
-    measurementId: "G-NZS4NP1ZH1"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
 
 function formatarModificador(val) {
     return val >= 0 ? `+${val}` : `${val}`;
@@ -149,15 +160,6 @@ function animateBg() {
     requestAnimationFrame(animateBg);
 }
 animateBg();
-
-window.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('img-neutro').src = CLASS_IMAGES.neutro;
-    document.getElementById('img-defensor').src = CLASS_IMAGES.defensor;
-    document.getElementById('img-assassino').src = CLASS_IMAGES.assassino;
-    document.getElementById('img-energetico').src = CLASS_IMAGES.energetico;
-    document.getElementById('img-arqueiro').src = CLASS_IMAGES.arqueiro;
-    document.getElementById('img-vampiro').src = CLASS_IMAGES.vampiro;
-});
 
 function selecionarClasse(op) {
     gameState.player.classeId = op;
@@ -427,7 +429,6 @@ function verificarVitoriaInimigo() {
 function spawnNovoInimigo() {
     limparLog();
 
-    
     const modelo = BESTIARIO_INIMIGOS[Math.floor(Math.random() * BESTIARIO_INIMIGOS.length)];
     const multiplicador = 1 + (gameState.mortosTotais * 0.05);
 
@@ -760,11 +761,9 @@ function dropItemBoss() {
         }
     ];
 
-    
     bossItens.forEach(item => {
         const card = document.createElement('div');
         card.className = "bg-slate-950 border border-red-800 hover:border-red-500 p-4 rounded-xl cursor-pointer transition flex flex-col justify-between group text-center shadow-lg hover:shadow-red-500/20";
-        
         
         card.onclick = () => {
             item.efeito(gameState.player);
@@ -785,7 +784,6 @@ function dropItemBoss() {
         container.appendChild(card);
     });
 
-    
     document.getElementById('modalLoot').classList.remove('hidden');
 }
 
@@ -797,7 +795,6 @@ function atualizarTela() {
     const boss = gameState.boss;
     const isBoss = gameState.bossAtivo;
 
-    // Helper para atualizar texto sem travar o código caso o ID não exista
     const setTexto = (id, texto) => {
         const el = document.getElementById(id);
         if (el) el.innerText = texto;
@@ -897,8 +894,7 @@ function renderBadgesStatus(statusArray) {
         container.appendChild(span);
     });
 }
-let currentUser = "";
-let dadosPlacarOnline = []; // Guarda temporariamente os dados carregados do Firebase
+
 async function registrar() {
     let u = document.getElementById('inputUser').value.trim();
     let p = document.getElementById('inputPass').value.trim();
@@ -947,10 +943,10 @@ async function logar() {
         alert("Erro ao realizar login no servidor.");
     }
 }
+
 async function salvarPontuacao() {
     if (!currentUser) return;
 
-    // Converte o nome de usuário para minúsculas para usar como chave única do documento
     const userDocRef = db.collection('placar').doc(currentUser.toLowerCase());
 
     try {
@@ -959,7 +955,6 @@ async function salvarPontuacao() {
         if (docSnap.exists) {
             const pontuacaoAntiga = docSnap.data().rodada || 0;
 
-            // Só atualiza no banco se a nova rodada atingida for MAIOR que o recorde anterior
             if (gameState.mortosTotais > pontuacaoAntiga) {
                 await userDocRef.set({
                     user: currentUser,
@@ -1012,10 +1007,8 @@ async function abrirPlacar() {
             dadosPlacarOnline.push(run);
 
             const div = document.createElement('div');
-            // 'cursor-pointer' e o 'onclick' na div inteira para facilitar o clique
             div.className = "bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-amber-500/50 cursor-pointer flex justify-between items-center transition group";
             
-            // Garante que a função receba o índice correto do elemento
             const currentIndex = index;
             div.onclick = () => mostrarDetalhesJogador(currentIndex);
             
