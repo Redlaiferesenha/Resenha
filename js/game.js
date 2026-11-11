@@ -620,7 +620,7 @@ function usarHabilidade(op) {
     if (!verificarVitoriaInimigo()) finalizarTurnoPlayer();
 }
 
-function finalizarTurnoPlayer() {
+async function finalizarTurnoPlayer() {
     if (gameState.bossAtivo) {
         processarStatus(gameState.boss);
         if (verificarVitoriaInimigo()) return;
@@ -660,7 +660,7 @@ function finalizarTurnoPlayer() {
     gameState.tipoContraAtaque = 0;
 
     if (p.vidaatualpla <= 0) {
-        salvarPontuacao();
+        await salvarPontuacao();
         document.getElementById('goTotalMortos').innerText = gameState.mortosTotais;
         document.getElementById('goTotalRodadas').innerText = gameState.rodada;
         document.getElementById('modalGameOver').classList.remove('hidden');
