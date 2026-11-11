@@ -752,26 +752,20 @@ function aplicarItemLoot(item) {
 function dropItemBoss() {
     const container = document.getElementById('cardsLootContainer');
     container.innerHTML = '';
-    const bossItens = [
-        {
-            nome: "Máscara de Lobo",
-            img: "imagens/imagensitem/mascaralobo.png",
-            desc: "+4 Max HP, +4 Atk, -2 Defesa",
-            efeito: (p) => { p.vidamaxpla += 4; curarPlayer(4); p.atkpla += 4; p.defpla -= 2; }
-        },
-        {
-            nome: "Livro Endiabrado",
-            img: "imagens/imagensitem/livroendiabrado.png",
-            desc: "+3 Atk, +3 Dano, Perde 25% HP",
-            efeito: (p) => { p.atkpla += 3; p.danpla += 3; p.vidaatualpla = Math.floor(p.vidaatualpla * 0.75); }
-        }
-    ];
+    const itensSorteados = [];
+    const copiaCatalogo = [...catalogoItensBoss];
 
-    bossItens.forEach(item => {
+    for (let i = 0; i < 3; i++) {
+        if (copiaCatalogo.length === 0) break;
+        const indexAleatorio = Math.floor(Math.random() * copiaCatalogo.length);
+        itensSorteados.push(copiaCatalogo.splice(indexAleatorio, 1)[0]);
+    }
+    itensSorteados.forEach(item => {
         const card = document.createElement('div');
         card.className = "bg-slate-950 border border-red-800 hover:border-red-500 p-4 rounded-xl cursor-pointer transition flex flex-col justify-between group text-center shadow-lg hover:shadow-red-500/20";
         
         card.onclick = () => {
+            // Executa o efeito puxando da estrutura do catálogo
             item.efeito(gameState.player);
             gameState.player.itensInventario.push({ nome: item.nome, img: item.img });
             logMsg(`👑 Drop do Boss Equipado: <b>${item.nome}</b> (${item.desc})`, 'crit');
@@ -792,7 +786,6 @@ function dropItemBoss() {
 
     document.getElementById('modalLoot').classList.remove('hidden');
 }
-
 function reiniciarJogo() { location.reload(); }
 
 function atualizarTela() {
