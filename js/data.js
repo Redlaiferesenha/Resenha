@@ -64,6 +64,11 @@ let gameState = {
     ambienteAtual: 0, 
     bossAtivo: false,
     tipoContraAtaque: 0, 
+
+    
+    habAtkBonus: 2,   
+    habDanoBonus: 1,  
+    habCuraValor: 6,  
     
     danchama: 2,
     redconge: 2,
