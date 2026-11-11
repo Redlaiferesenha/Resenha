@@ -356,23 +356,15 @@ function limparStatus(target, isBoss) {
 }
 
 function verificarVitoriaInimigo() {
-    // Helper local para aplicar o Pote Guloso
-    const aplicarPoteGuloso = () => {
-        gameState.saquesRestantes = gameState.potegulosoAtivo ? 2 : 1;
-        if (gameState.potegulosoAtivo) {
-            gameState.potegulosoAtivo = false;
-            const idx = gameState.player.itensInventario.findIndex(i => i.nome === "Pote Guloso");
-            if (idx > -1) gameState.player.itensInventario.splice(idx, 1);
-        }
-    };
-
     if (gameState.bossAtivo) {
         if (gameState.boss.vidatual <= 0) {
             logMsg(`🏆 <b>VOCÊ DERROTOU O BOSS ${gameState.boss.nome}!</b>`, 'crit');
             gameState.bossAtivo = false;
             gameState.mortosTotais++;
             
-            aplicarPoteGuloso();
+            // Define a quantidade de saques para a vitória
+            gameState.saquesRestantes = gameState.potegulosoAtivo ? 2 : 1;
+            
             dropItemBoss();
             
             gameState.inimigosParaAmbiente++;
@@ -397,7 +389,9 @@ function verificarVitoriaInimigo() {
                 gerarNovoAmbiente();
             }
 
-            aplicarPoteGuloso();
+            // Define a quantidade de saques para a vitória
+            gameState.saquesRestantes = gameState.potegulosoAtivo ? 2 : 1;
+            
             abrirModalLoot();
 
             if (gameState.mortosNormais > 0 && gameState.mortosNormais % 4 === 0) {
@@ -438,6 +432,18 @@ function verificarVitoriaInimigo() {
         }
     }
     return false;
+}
+
+// Função auxiliar para remover o Pote Guloso do inventário e desativar o efeito
+function consumirPoteGulosoSeNecessario() {
+    if (gameState.potegulosoAtivo && gameState.saquesRestantes === 0) {
+        gameState.potegulosoAtivo = false;
+        const idx = gameState.player.itensInventario.findIndex(i => i.nome === "Pote Guloso");
+        if (idx > -1) {
+            gameState.player.itensInventario.splice(idx, 1);
+            logMsg(`🧪 <b>Pote Guloso</b> foi consumido!`, 'system');
+        }
+    }
 }
 
 function spawnNovoInimigo() {
@@ -804,12 +810,14 @@ function aplicarItemLoot(item) {
     logMsg(`🎁 Item Equipado: <b>${item.nome}</b> (${item.desc})`, 'system');
     
     gameState.saquesRestantes--;
+
     if (gameState.saquesRestantes > 0) {
-        logMsg(`🍽️ <b>Pote Guloso:</b> Você pode escolher mais 1 item!`, 'system');
-        abrirModalLoot(); // Abre novamente com novos itens
+        logMsg(`🍽️ <b>Pote Guloso:</b> Escolha mais 1 item!`, 'system');
+        abrirModalLoot(); // Abre uma SEGUNDA tela com 3 novos itens sorteados!
         return;
     }
 
+    consumirPoteGulosoSeNecessario();
     document.getElementById('modalLoot').classList.add('hidden');
     atualizarTela();
 }
@@ -818,7 +826,6 @@ function dropItemBoss() {
     const container = document.getElementById('cardsLootContainer');
     container.innerHTML = '';
     const itensSorteados = [];
-    // Corrigido para acessar CATALOGO_ITENS_BOSS (maiúsculo)
     const copiaCatalogo = [...CATALOGO_ITENS_BOSS];
 
     for (let i = 0; i < 3; i++) {
@@ -837,12 +844,14 @@ function dropItemBoss() {
             logMsg(`👑 Drop do Boss Equipado: <b>${item.nome}</b> (${item.desc})`, 'crit');
             
             gameState.saquesRestantes--;
+
             if (gameState.saquesRestantes > 0) {
-                logMsg(`🍽️ <b>Pote Guloso:</b> Você pode escolher mais 1 item de boss!`, 'system');
-                card.remove(); // Remove apenas o card escolhido da tela
+                logMsg(`🍽️ <b>Pote Guloso:</b> Escolha mais 1 item de Boss!`, 'system');
+                dropItemBoss(); // Abre uma SEGUNDA tela com 3 novos drops de Boss!
                 return;
             }
-        
+
+            consumirPoteGulosoSeNecessario();
             document.getElementById('modalLoot').classList.add('hidden');
             atualizarTela();
         };
@@ -860,7 +869,6 @@ function dropItemBoss() {
 
     document.getElementById('modalLoot').classList.remove('hidden');
 }
-
 function reiniciarJogo() { location.reload(); }
 
 function atualizarTela() {
