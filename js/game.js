@@ -1,6 +1,3 @@
-// ==========================================
-// 1. VARIÁVEIS GLOBAIS E LOGOUT
-// ==========================================
 let currentUser = "";
 let dadosPlacarOnline = [];
 
@@ -16,10 +13,6 @@ function deslogar() {
     if (inputU) inputU.value = '';
     if (inputP) inputP.value = '';
 }
-
-// ==========================================
-// 2. CONFIGURAÇÃO E INICIALIZAÇÃO FIREBASE
-// ==========================================
 const firebaseConfig = {
     apiKey: "AIzaSyDodcLJZkIAyrIvNWmWsgLjdeR0zgYOlRQ",
     authDomain: "joguin-resenha.firebaseapp.com",
@@ -32,10 +25,6 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-
-// ==========================================
-// 3. CARREGAMENTO DO DOM (ÚNICO)
-// ==========================================
 window.addEventListener('DOMContentLoaded', () => {
     if (typeof CLASS_IMAGES !== 'undefined') {
         if (document.getElementById('img-neutro')) document.getElementById('img-neutro').src = CLASS_IMAGES.neutro;
