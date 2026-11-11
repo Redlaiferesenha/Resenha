@@ -52,6 +52,7 @@ let gameState = {
     dansang: 3,
     rodormin: 4,
     vampiroPassiva: false,
+    saquesRestantes: 1,
 
     player: {
         classeNome: "Neutro",
