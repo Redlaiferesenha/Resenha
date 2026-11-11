@@ -376,7 +376,6 @@ function verificarVitoriaInimigo() {
             gameState.mortosTotais++;
             gameState.mortosNormais++;
             
-            
             gameState.inimigosParaAmbiente++;
             if(gameState.inimigosParaAmbiente >= 2) {
                 gameState.inimigosParaAmbiente = 0;
@@ -389,6 +388,15 @@ function verificarVitoriaInimigo() {
                 
                 const bossModelo = BESTIARIO_BOSSES[Math.floor(Math.random() * BESTIARIO_BOSSES.length)];
                 const esc = 1 + (gameState.mortosTotais * 0.08);
+                const danoBrutoBoss = bossModelo.danobase * esc;
+                
+                
+                let bonusBoss = Math.floor(danoBrutoBoss * 0.3) + 1;
+                let dadoBoss = Math.floor(danoBrutoBoss * 0.7) + 2;
+                
+                if (dadoBoss <= bonusBoss) {
+                    dadoBoss = bonusBoss + 2;
+                }
 
                 gameState.boss = {
                     nome: bossModelo.nome,
@@ -397,8 +405,8 @@ function verificarVitoriaInimigo() {
                     vidatual: Math.floor(bossModelo.vidabase * esc),
                     atkboss: Math.floor(bossModelo.atkbase * esc),
                     defboss: bossModelo.defbase,
-                    danoss: Math.floor(bossModelo.danobase * esc),
-                    tipdanboss: 2,
+                    danoss: bonusBoss, 
+                    tipdanboss: dadoBoss, 
                     status: []
                 };
 
@@ -420,6 +428,14 @@ function spawnNovoInimigo() {
 
     const modelo = BESTIARIO_INIMIGOS[Math.floor(Math.random() * BESTIARIO_INIMIGOS.length)];
     const multiplicador = 1 + (gameState.mortosTotais * 0.05);
+    const danoBrutoIni = modelo.danobase + (gameState.mortosTotais * 0.3);
+    
+    let bonusIni = Math.floor(danoBrutoIni * 0.3) + 1;
+    let dadoIni = Math.floor(danoBrutoIni * 0.7) + 2;
+    
+    if (dadoIni <= bonusIni) {
+        dadoIni = bonusIni + 2;
+    }
 
     gameState.inimigo = {
         nome: `${modelo.nome} (Nível ${gameState.mortosTotais + 1})`,
@@ -428,8 +444,8 @@ function spawnNovoInimigo() {
         vidatualini: Math.floor(modelo.vidabase * multiplicador),
         atkini: Math.floor(modelo.atkbase + (gameState.mortosTotais * 0.5)),
         defini: modelo.defbase,
-        danini: Math.floor(modelo.danobase + (gameState.mortosTotais * 0.3)),
-        tipdanini: 1,
+        danini: bonusIni, 
+        tipdanini: dadoIni, 
         status: []
     };
 
