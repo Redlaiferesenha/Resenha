@@ -44,15 +44,21 @@ const CATALOGO_ITENS_BOSS = [
         gameState.calviceVampiricaAtiva = true; 
     }},
     { id: 6, nome: "Escudo Sorridente", img: "imagens/imagensitem/escudosorridente.png", desc: "+5 Defesa, +3 Redução de Dano (RD), -3 Atk", efeito: (p) => { p.defpla += 5; p.rd += 3; p.atkpla -= 3; } },
-    { id: 7, nome: "Definitivamente não é Césio", img: "imagens/imagensitem/definitivamentenãoCésio.jpg", desc: "+10 Energia Max, +1 Efeitos de Status, Perca 25% HP Max", efeito: (p) => { 
+    { id: 7, nome: "Definitivamente não é Césio", img: "imagens/imagensitem/definitivamentenãoCésio.jpg", desc: "+10 Energia Max, +1 em todos os efeitos de habilidades, Perca 25% HP Max", efeito: (p) => { 
         p.energiamax += 10; p.energiaatual += 10; 
         p.vidamaxpla = Math.floor(p.vidamaxpla * 0.75); 
         if (p.vidaatualpla > p.vidamaxpla) p.vidaatualpla = p.vidamaxpla;
+        gameState.habAtkBonus += 1;
+        gameState.habDanoBonus += 1;
+        gameState.habCuraValor += 1;
         gameState.danchama += 1; gameState.redconge += 1; gameState.danven += 1; gameState.dansang += 1; gameState.rodormin += 1;
     }},
-    { id: 8, nome: "Ensinamentos do mago da era antiga", img: "imagens/imagensitem/magodaeraantiga.png", desc: "+3 em todos efeitos de status, perde 9 de Energia Max", efeito: (p) => { 
+    { id: 8, nome: "Ensinamentos do mago da era antiga", img: "imagens/imagensitem/magodaeraantiga.png", desc: "+3 em todos os efeitos de habilidades, perde 9 de Energia Max", efeito: (p) => { 
         p.energiamax -= 9; 
         if (p.energiaatual > p.energiamax) p.energiaatual = p.energiamax;
+        gameState.habAtkBonus += 3;
+        gameState.habDanoBonus += 3;
+        gameState.habCuraValor += 3;
         gameState.danchama += 3; gameState.redconge += 3; gameState.danven += 3; gameState.dansang += 3; gameState.rodormin += 3;
     }}
 ];
