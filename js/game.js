@@ -701,7 +701,7 @@ function abrirModalLoot() {
 
 function aplicarItemLoot(item) {
     item.efeito(gameState.player);
-    gameState.player.itensInventario.push({ nome: item.nome, img: item.imagem });
+    gameState.player.itensInventario.push({ nome: item.nome, img: item.img });
     logMsg(`🎁 Item Equipado: <b>${item.nome}</b> (${item.desc})`, 'system');
     document.getElementById('modalLoot').classList.add('hidden');
     atualizarTela();
@@ -733,7 +733,7 @@ function dropItemBoss() {
         
         card.onclick = () => {
             item.efeito(gameState.player);
-            gameState.player.itensInventario.push({ nome: item.nome, img: item.imagem });
+            gameState.player.itensInventario.push({ nome: item.nome, img: item.img });
             logMsg(`👑 Drop do Boss Equipado: <b>${item.nome}</b> (${item.desc})`, 'crit');
             document.getElementById('modalLoot').classList.add('hidden');
             atualizarTela();
