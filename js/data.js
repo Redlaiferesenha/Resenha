@@ -54,7 +54,6 @@ let gameState = {
     bossAtivo: false,
     tipoContraAtaque: 0, 
 
-    
     habAtkBonus: 2,   
     habDanoBonus: 1,  
     habCuraValor: 6,  
