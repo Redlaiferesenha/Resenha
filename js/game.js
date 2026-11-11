@@ -149,10 +149,10 @@ function selecionarClasse(op) {
             gameState.player = { classeNome: "Defensor", classeId: 2, vidamaxpla: 35, vidaatualpla: 35, atkpla: 2, danpla: 2, defpla: 16, tipdan: 4, critico: 20, energiamax: 12, energiaatual: 12, rd: 2, itensInventario: [] };
             break;
         case 3:
-            gameState.player = { classeNome: "Assassino", classeId: 3, vidamaxpla: 20, vidaatualpla: 20, atkpla: 4, danpla: 3, defpla: 14, tipdan: 4, critico: 20, energiamax: 14, energiaatual: 14, rd: 0, itensInventario: [] };
+            gameState.player = { classeNome: "Assassino", classeId: 3, vidamaxpla: 24, vidaatualpla: 24, atkpla: 4, danpla: 3, defpla: 14, tipdan: 4, critico: 20, energiamax: 14, energiaatual: 14, rd: 0, itensInventario: [] };
             break;
         case 4:
-            gameState.player = { classeNome: "Energético", classeId: 4, vidamaxpla: 20, vidaatualpla: 20, atkpla: 3, danpla: 2, defpla: 12, tipdan: 4, critico: 20, energiamax: 17, energiaatual: 17, rd: 0, itensInventario: [] };
+            gameState.player = { classeNome: "Energético", classeId: 4, vidamaxpla: 23, vidaatualpla: 23, atkpla: 3, danpla: 2, defpla: 12, tipdan: 4, critico: 20, energiamax: 17, energiaatual: 17, rd: 0, itensInventario: [] };
             gameState.danchama += 1;
             gameState.redconge += 1;
             gameState.danven += 1;
@@ -160,7 +160,7 @@ function selecionarClasse(op) {
             gameState.dansang += 1;
             break;
         case 5:
-            gameState.player = { classeNome: "Arqueiro", classeId: 5, vidamaxpla: 20, vidaatualpla: 20, atkpla: 3, danpla: 4, defpla: 16, tipdan: 6, critico: 20, energiamax: 12, energiaatual: 12, rd: 0, itensInventario: [] };
+            gameState.player = { classeNome: "Arqueiro", classeId: 5, vidamaxpla: 24, vidaatualpla: 24, atkpla: 3, danpla: 4, defpla: 16, tipdan: 6, critico: 20, energiamax: 12, energiaatual: 12, rd: 0, itensInventario: [] };
             gameState.danchama += 1;
             gameState.redconge += 1;
             gameState.danven += 1;
