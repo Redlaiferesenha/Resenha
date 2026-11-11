@@ -911,15 +911,40 @@ async function logar() {
     }
 }
 async function salvarPontuacao() {
+    if (!currentUser) return;
+
+    // Converte o nome de usuário para minúsculas para usar como chave única do documento
+    const userDocRef = db.collection('placar').doc(currentUser.toLowerCase());
+
     try {
-        await db.collection('placar').add({
-            user: currentUser,
-            classe: gameState.player.classeNome,
-            rodada: gameState.mortosTotais,
-            stats: gameState.player,
-            criadoEm: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        console.log("Pontuação salva com sucesso no Firebase!");
+        const docSnap = await userDocRef.get();
+
+        if (docSnap.exists) {
+            const pontuacaoAntiga = docSnap.data().rodada || 0;
+
+            // Só atualiza no banco se a nova rodada atingida for MAIOR que o recorde anterior
+            if (gameState.mortosTotais > pontuacaoAntiga) {
+                await userDocRef.set({
+                    user: currentUser,
+                    classe: gameState.player.classeNome,
+                    rodada: gameState.mortosTotais,
+                    stats: gameState.player,
+                    criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                console.log("Novo recorde pessoal salvo com sucesso!");
+            } else {
+                console.log("Pontuação menor ou igual ao recorde anterior. Não foi atualizado.");
+            }
+        } else {
+            await userDocRef.set({
+                user: currentUser,
+                classe: gameState.player.classeNome,
+                rodada: gameState.mortosTotais,
+                stats: gameState.player,
+                criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            console.log("Primeira pontuação salva no Firebase!");
+        }
     } catch (error) {
         console.error("Erro ao salvar pontuação:", error);
     }
