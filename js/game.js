@@ -721,13 +721,12 @@ async function finalizarTurnoPlayer() {
     }
 
     gameState.tipoContraAtaque = 0;
-
     if (p.vidaatualpla <= 0) {
         if (gameState.auraMonstroAtiva) {
             p.vidaatualpla = p.vidamaxpla;
             gameState.auraMonstroAtiva = false;
             let idx = p.itensInventario.findIndex(i => i.nome === "Aura do Monstro");
-            if (idx > -1) p.itensInventario.splice(idx, 1); // Consome o item
+            if (idx > -1) p.itensInventario.splice(idx, 1);
             
             logMsg(`🌟 <b>AURA DO MONSTRO!</b> Você retornou atraves da morte!`, 'crit');
             atualizarTela();
@@ -736,6 +735,10 @@ async function finalizarTurnoPlayer() {
 
         await salvarPontuacao();
         document.getElementById('goTotalMortos').innerText = gameState.mortosTotais;
+        document.getElementById('goTotalRodadas').innerText = gameState.rodada;
+        document.getElementById('modalGameOver').classList.remove('hidden');
+        return;
+    }
 
     gameState.rodada++;
     atualizarTela();
