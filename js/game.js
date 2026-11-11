@@ -377,7 +377,7 @@ function verificarVitoriaInimigo() {
                 gameState.bossAtivo = true;
                 
                 const bossModelo = BESTIARIO_BOSSES[Math.floor(Math.random() * BESTIARIO_BOSSES.length)];
-                const esc = 1 + (gameState.mortosTotais * 0.15);
+                const esc = 1 + (gameState.mortosTotais * 0.08);
 
                 gameState.boss = {
                     nome: bossModelo.nome,
@@ -409,7 +409,7 @@ function spawnNovoInimigo() {
 
     
     const modelo = BESTIARIO_INIMIGOS[Math.floor(Math.random() * BESTIARIO_INIMIGOS.length)];
-    const multiplicador = 1 + (gameState.mortosTotais * 0.1); // Aumenta 10% de força a cada vitória
+    const multiplicador = 1 + (gameState.mortosTotais * 0.05);
 
     gameState.inimigo = {
         nome: `${modelo.nome} (Nível ${gameState.mortosTotais + 1})`,
@@ -472,7 +472,8 @@ function acaoDescansar() {
     const p = gameState.player;
     p.energiaatual += 4;
     if (p.energiaatual > p.energiamax) p.energiaatual = p.energiamax;
-    logMsg(`💤 Você descansou e recuperou +4 de Energia! (${p.energiaatual}/${p.energiamax})`, 'player');
+    curarPlayer(2);
+    logMsg(`💤 Você descansou e recuperou +4 de Energia e +2 de HP! (${p.energiaatual}/${p.energiamax})`, 'player');
     finalizarTurnoPlayer();
 }
 
