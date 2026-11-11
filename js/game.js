@@ -1,3 +1,17 @@
+window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('img-neutro').src = CLASS_IMAGES.neutro;
+    document.getElementById('img-defensor').src = CLASS_IMAGES.defensor;
+    document.getElementById('img-assassino').src = CLASS_IMAGES.assassino;
+    document.getElementById('img-energetico').src = CLASS_IMAGES.energetico;
+    document.getElementById('img-arqueiro').src = CLASS_IMAGES.arqueiro;
+    document.getElementById('img-vampiro').src = CLASS_IMAGES.vampiro;
+    let usuarioSalvo = localStorage.getItem('usuarioLogado');
+    if (usuarioSalvo) {
+        currentUser = usuarioSalvo;
+        document.getElementById('telaLogin').classList.add('hidden');
+        document.getElementById('telaSelecaoClasse').classList.remove('hidden');
+    }
+});
 const firebaseConfig = {
     apiKey: "AIzaSyDodcLJZkIAyrIvNWmWsgLjdeR0zgYOlRQ",
     authDomain: "joguin-resenha.firebaseapp.com",
@@ -900,6 +914,8 @@ async function logar() {
         const userDoc = await db.collection('usuarios').doc(userKey).get();
         if (userDoc.exists && userDoc.data().senha === p) {
             currentUser = userDoc.data().nome;
+            localStorage.setItem('usuarioLogado', currentUser);
+
             document.getElementById('telaLogin').classList.add('hidden');
             document.getElementById('telaSelecaoClasse').classList.remove('hidden');
         } else {
