@@ -927,6 +927,19 @@ async function logar() {
         alert("Erro ao realizar login no servidor.");
     }
 }
+function deslogar() {
+    // Remove o usuário salvo no navegador
+    localStorage.removeItem('usuarioLogado');
+    currentUser = "";
+
+    // Oculta a tela de seleção de classe e exibe a tela de login
+    document.getElementById('telaSelecaoClasse').classList.add('hidden');
+    document.getElementById('telaLogin').classList.remove('hidden');
+
+    // Limpa os campos de entrada de texto
+    document.getElementById('inputUser').value = '';
+    document.getElementById('inputPass').value = '';
+}
 async function salvarPontuacao() {
     if (!currentUser) return;
 
