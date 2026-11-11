@@ -818,13 +818,15 @@ function dropItemBoss() {
     const container = document.getElementById('cardsLootContainer');
     container.innerHTML = '';
     const itensSorteados = [];
-    const copiaCatalogo = [...catalogoItensBoss];
+    // Corrigido para acessar CATALOGO_ITENS_BOSS (maiúsculo)
+    const copiaCatalogo = [...CATALOGO_ITENS_BOSS];
 
     for (let i = 0; i < 3; i++) {
         if (copiaCatalogo.length === 0) break;
         const indexAleatorio = Math.floor(Math.random() * copiaCatalogo.length);
         itensSorteados.push(copiaCatalogo.splice(indexAleatorio, 1)[0]);
     }
+
     itensSorteados.forEach(item => {
         const card = document.createElement('div');
         card.className = "bg-slate-950 border border-red-800 hover:border-red-500 p-4 rounded-xl cursor-pointer transition flex flex-col justify-between group text-center shadow-lg hover:shadow-red-500/20";
@@ -858,6 +860,7 @@ function dropItemBoss() {
 
     document.getElementById('modalLoot').classList.remove('hidden');
 }
+
 function reiniciarJogo() { location.reload(); }
 
 function atualizarTela() {
