@@ -28,7 +28,7 @@ const CATALOGO_ITENS = [
     { id: 10, nome: "Olho de Aranha", img: "imagens/imagensitem/olharanha.png", desc: "+1 Dano de Veneno", efeito: () => gameState.danven += 1 },
     { id: 11, nome: "Analgésico", img: "imagens/imagensitem/analgesico.png", desc: "+1 Resistência a Dano (RD)", efeito: (p) => p.rd += 1 },
     { id: 12, nome: "Máscara para Dormir", img: "imagens/imagensitem/mascaradormir.png", desc: "+1 Turno de Duração do Sono", efeito: () => gameState.rodormin += 1 },
-    { id: 13, nome: "Picolé do Amor", img: "imagens/imagensitem/picoleamor.png", desc: "+1 Redução de Defesa em Gelos", efeito: () => gameState.redconge += 1 },
+    { id: 13, nome: "Picolé do Amor", img: "imagens/imagensitem/picoleamor.png", desc: "+1 Redução de Defesa quando congelado", efeito: () => gameState.redconge += 1 },
     { id: 14, nome: "Labubu", img: "imagens/imagensitem/labubu.png", desc: "+2 Atk, +2 Max Energia, -3 HP", efeito: (p) => { p.atkpla += 2; p.energiamax += 2; p.vidaatualpla -= 3; } },
     { id: 15, nome: "Dente Falso de Vampiro", img: "imagens/imagensitem/dentefalso.png", desc: "+1 Dano de Sangramento", efeito: () => gameState.dansang += 1 }
 ];
