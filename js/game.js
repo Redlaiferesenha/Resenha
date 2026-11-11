@@ -973,7 +973,6 @@ async function abrirPlacar() {
     document.getElementById('modalPlacar').classList.remove('hidden');
 
     try {
-        // Busca os 50 melhores resultados ordenados pela maior rodada
         const snapshot = await db.collection('placar')
             .orderBy('rodada', 'desc')
             .limit(50)
@@ -993,25 +992,29 @@ async function abrirPlacar() {
             dadosPlacarOnline.push(run);
 
             const div = document.createElement('div');
-            div.className = "bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-amber-500/50 cursor-pointer flex justify-between items-center transition";
-            div.onclick = () => mostrarDetalhesJogador(index);
+            // 'cursor-pointer' e o 'onclick' na div inteira para facilitar o clique
+            div.className = "bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-amber-500/50 cursor-pointer flex justify-between items-center transition group";
+            
+            // Garante que a função receba o índice correto do elemento
+            const currentIndex = index;
+            div.onclick = () => mostrarDetalhesJogador(currentIndex);
             
             div.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <span class="text-amber-500 font-black text-lg">#${index + 1}</span>
+                <div class="flex items-center gap-3 pointer-events-none">
+                    <span class="text-amber-500 font-black text-lg">#${currentIndex + 1}</span>
                     <div>
-                        <div class="font-bold text-slate-200">${run.user}</div>
+                        <div class="font-bold text-slate-200 group-hover:text-amber-400 transition">${run.user}</div>
                         <div class="text-[10px] text-slate-500">${run.classe}</div>
                     </div>
                 </div>
-                <div class="font-black text-indigo-400 text-xl">${run.rodada}</div>
+                <div class="font-black text-indigo-400 text-xl pointer-events-none">${run.rodada}</div>
             `;
             lista.appendChild(div);
             index++;
         });
 
     } catch (error) {
-        console.error("Erro ao buscar placar:", error);
+        console.error("Erro ao carregar placar:", error);
         lista.innerHTML = '<p class="text-center text-red-400 text-sm mt-4">Erro ao carregar o placar online.</p>';
     }
 }
