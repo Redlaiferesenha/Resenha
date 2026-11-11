@@ -44,9 +44,7 @@ const CATALOGO_ITENS_BOSS = [
     desc: "Permite pegar 2 itens no próximo inimigo derrotado (Consumível)", 
     efeito: (p) => { 
         gameState.potegulosoAtivo = true; 
-    } 
-}
-
+    } },
     { id: 4, nome: "Aura do Monstro", img: "imagens/imagensitem/auradomosntro.png", desc: "Quando zerar o HP, revive com 100% de HP (Consumível)", efeito: (p) => { gameState.auraMonstroAtiva = true; } },
     { id: 5, nome: "Calvície Vampírica", img: "imagens/imagensitem/calvice.png", desc: "Roubo de vida permanente (60% do dano) mas perde 50% HP Max", efeito: (p) => { 
         p.vidamaxpla = Math.floor(p.vidamaxpla * 0.5); 
