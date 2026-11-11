@@ -570,15 +570,38 @@ function executarContraAtaque(vezes = 1) {
     }
     return false;
 }
-
 function abrirModalHabilidades() {
     document.getElementById('modalEnergiaTxt').innerText = `${gameState.player.energiaatual}/${gameState.player.energiamax}`;
     
     const grid = document.getElementById('containerHabilidadesGrid');
     grid.innerHTML = '';
 
+    function getDescricaoDinamica(id) {
+        switch(id) {
+            case 1:
+                return `Bônus de +${gameState.habAtkBonus} no teste d20 e +${gameState.habDanoBonus} de dano no golpe.`;
+            case 2:
+                return `Caso o inimigo erre o ataque nesta rodada, ataca 2 vezes em resposta!`;
+            case 3:
+                return `Restaura ${gameState.habCuraValor} pontos de vida imediatamente.`;
+            case 4:
+                return `Aplica queimadura: ${gameState.danchama} de dano por rodada e reduz a Defesa em 1.`;
+            case 5:
+                return `Congela o alvo: reduz a Defesa do inimigo em ${gameState.redconge}.`;
+            case 6:
+                return `Aplica veneno: ${gameState.danven} de dano/rodada por 4 rodadas (${gameState.danven * 4} de dano total).`;
+            case 7:
+                return `Faz o inimigo dormir por 1d${gameState.rodormin} rodadas (impede ataques).`;
+            case 8:
+                return `Aplica sangramento: ${gameState.dansang} de dano por 7 rodadas (Ativa passiva do Vampiro!).`;
+            default:
+                return '';
+        }
+    }
+
     LISTA_HABILIDADES.forEach(hab => {
         const temEnergia = gameState.player.energiaatual >= hab.custo;
+        const descAtualizada = getDescricaoDinamica(hab.id);
         const div = document.createElement('div');
         div.className = `relative p-4 rounded-xl border flex items-center justify-between transition overflow-hidden group ${
             temEnergia ? 'bg-slate-950/80 border-slate-800 hover:border-purple-500/60 cursor-pointer' 
@@ -592,7 +615,7 @@ function abrirModalHabilidades() {
                 <span class="text-3xl transition group-hover:scale-110">${hab.icone}</span>
                 <div>
                     <div class="font-bold text-sm ${hab.cor}">${hab.nome}</div>
-                    <div class="text-xs text-slate-400">${hab.desc}</div>
+                    <div class="text-xs text-slate-400">${descAtualizada}</div>
                 </div>
             </div>
             <span class="text-xs bg-cyan-950 text-cyan-300 font-bold px-2.5 py-1 rounded-lg border border-cyan-800 shrink-0 ml-2 relative z-0">${hab.custo} Energia</span>
