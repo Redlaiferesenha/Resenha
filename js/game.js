@@ -383,13 +383,14 @@ function verificarVitoriaInimigo() {
             }
 
             abrirModalLoot();
-            if (gameState.mortosTotais % 5 === 0) {
+            if (gameState.mortosNormais > 0 && gameState.mortosNormais % 4 === 0) {
                 gameState.bossAtivo = true;
                 
                 const bossModelo = BESTIARIO_BOSSES[Math.floor(Math.random() * BESTIARIO_BOSSES.length)];
-                const esc = 1 + (gameState.mortosTotais * 0.08);
-                const danoBrutoBoss = bossModelo.danobase * esc;
+                let mortosParaBoss = Math.max(0, gameState.mortosNormais - 4); 
+                const esc = 1 + (mortosParaBoss * 0.08);
                 
+                const danoBrutoBoss = bossModelo.danobase * esc;
                 
                 let bonusBoss = Math.floor(danoBrutoBoss * 0.3) + 1;
                 let dadoBoss = Math.floor(danoBrutoBoss * 0.7) + 2;
