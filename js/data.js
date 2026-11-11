@@ -100,25 +100,25 @@ const LISTA_HABILIDADES = [
 ];
 
 const BESTIARIO_INIMIGOS = [
-    { nome: "Goblin", img: "imagens/imagensini/goblin.png", vidabase: 25, atkbase: 3, defbase: 10, danobase: 2 },
-    { nome: "Esqueleto", img: "imagens/imagensini/esqueleto.png", vidabase: 22, atkbase: 4, defbase: 11, danobase: 3 },
-    { nome: "Orc", img: "imagens/imagensini/orc.png", vidabase: 35, atkbase: 4, defbase: 12, danobase: 3 },
-    { nome: "Zumbi", img: "imagens/imagensini/zumbi.png", vidabase: 30, atkbase: 2, defbase: 9, danobase: 2 },
-    { nome: "Aranha Gigante", img: "imagens/imagensini/aranha.png", vidabase: 20, atkbase: 5, defbase: 11, danobase: 2 },
-    { nome: "Ladino", img: "imagens/imagensini/ladino.png", vidabase: 22, atkbase: 5, defbase: 12, danobase: 3 },
-    { nome: "Lobo", img: "imagens/imagensini/lobo.png", vidabase: 24, atkbase: 4, defbase: 10, danobase: 2 },
-    { nome: "Cogumelo Mutante", img: "imagens/imagensini/cogumelo.png", vidabase: 28, atkbase: 3, defbase: 10, danobase: 2 },
-    { nome: "Elemental de Fogo", img: "imagens/imagensini/elemental.png", vidabase: 26, atkbase: 5, defbase: 11, danobase: 4 },
-    { nome: "Ent", img: "imagens/imagensini/ent.png", vidabase: 40, atkbase: 3, defbase: 14, danobase: 3 },
-    { nome: "Golem de Gelo", img: "imagens/imagensini/golem.png", vidabase: 45, atkbase: 2, defbase: 15, danobase: 3 },
-    { nome: "Serpente", img: "imagens/imagensini/serpente.png", vidabase: 18, atkbase: 6, defbase: 10, danobase: 3 },
-    { nome: "Yeti", img: "imagens/imagensini/yeti.png", vidabase: 38, atkbase: 4, defbase: 13, danobase: 4 },
-    { nome: "Dragão Jovem", img: "imagens/imagensini/dragão.png", vidabase: 35, atkbase: 5, defbase: 13, danobase: 4 }
+    { nome: "Goblin", img: "imagens/imagensini/goblin.png", vidabase: 25, atkbase: 3, defbase: 10, danobase: 5 },
+    { nome: "Esqueleto", img: "imagens/imagensini/esqueleto.png", vidabase: 22, atkbase: 4, defbase: 11, danobase: 5 },
+    { nome: "Orc", img: "imagens/imagensini/orc.png", vidabase: 35, atkbase: 4, defbase: 12, danobase: 6 },
+    { nome: "Zumbi", img: "imagens/imagensini/zumbi.png", vidabase: 30, atkbase: 2, defbase: 9, danobase: 4 },
+    { nome: "Aranha Gigante", img: "imagens/imagensini/aranha.png", vidabase: 20, atkbase: 5, defbase: 11, danobase: 6 },
+    { nome: "Ladino", img: "imagens/imagensini/ladino.png", vidabase: 22, atkbase: 5, defbase: 12, danobase: 6 },
+    { nome: "Lobo", img: "imagens/imagensini/lobo.png", vidabase: 24, atkbase: 4, defbase: 10, danobase: 5 },
+    { nome: "Cogumelo Mutante", img: "imagens/imagensini/cogumelo.png", vidabase: 28, atkbase: 3, defbase: 10, danobase: 4 },
+    { nome: "Elemental de Fogo", img: "imagens/imagensini/elemental.png", vidabase: 26, atkbase: 5, defbase: 11, danobase: 7 },
+    { nome: "Ent", img: "imagens/imagensini/ent.png", vidabase: 40, atkbase: 3, defbase: 14, danobase: 5 },
+    { nome: "Golem de Gelo", img: "imagens/imagensini/golem.png", vidabase: 45, atkbase: 2, defbase: 15, danobase: 5 },
+    { nome: "Serpente", img: "imagens/imagensini/serpente.png", vidabase: 18, atkbase: 6, defbase: 10, danobase: 6 },
+    { nome: "Yeti", img: "imagens/imagensini/yeti.png", vidabase: 38, atkbase: 4, defbase: 13, danobase: 7 },
+    { nome: "Dragão Jovem", img: "imagens/imagensini/dragão.png", vidabase: 35, atkbase: 5, defbase: 13, danobase: 8 }
 ];
 
 const BESTIARIO_BOSSES = [
-    { nome: "SENHOR DAS SOMBRAS", img: "imagens/imagensini/senhor das sombras.png", vidabase: 60, atkbase: 6, defbase: 14, danobase: 5 },
-    { nome: "REI GOBLIN", img: "imagens/imagensini/reigoblin.png", vidabase: 50, atkbase: 5, defbase: 13, danobase: 4 },
-    { nome: "LICH SUPREMO", img: "imagens/imagensini/lichsupremo.png", vidabase: 55, atkbase: 7, defbase: 12, danobase: 6 },
-    { nome: "DRAGÃO ANCIÃO", img: "imagens/imagensini/dragãoanciao.png", vidabase: 80, atkbase: 8, defbase: 15, danobase: 7 }
+    { nome: "SENHOR DAS SOMBRAS", img: "imagens/imagensini/senhor das sombras.png", vidabase: 60, atkbase: 6, defbase: 14, danobase: 10 },
+    { nome: "REI GOBLIN", img: "imagens/imagensini/reigoblin.png", vidabase: 50, atkbase: 5, defbase: 13, danobase: 9 },
+    { nome: "LICH SUPREMO", img: "imagens/imagensini/lichsupremo.png", vidabase: 55, atkbase: 7, defbase: 12, danobase: 12 },
+    { nome: "DRAGÃO ANCIÃO", img: "imagens/imagensini/dragãoanciao.png", vidabase: 80, atkbase: 8, defbase: 15, danobase: 15 }
 ];
