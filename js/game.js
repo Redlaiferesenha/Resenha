@@ -164,6 +164,9 @@ function selecionarClasse(op) {
             break;
         case 4:
             gameState.player = { classeNome: "Energético", classeId: 4, vidamaxpla: 23, vidaatualpla: 23, atkpla: 3, danpla: 2, defpla: 12, tipdan: 4, critico: 20, energiamax: 17, energiaatual: 17, rd: 0, itensInventario: [] };
+            gameState.habAtkBonus += 1;
+            gameState.habDanoBonus += 1;
+            gameState.habCuraValor += 1;
             gameState.danchama += 1;
             gameState.redconge += 1;
             gameState.danven += 1;
