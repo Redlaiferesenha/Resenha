@@ -831,7 +831,6 @@ function atualizarTela() {
         if (typeof renderBadgesStatus === 'function') renderBadgesStatus(ini.status || []);
     }
 
-    // Atualização da Imagem
     const oponente = isBoss ? boss : ini;
     const imgElement = document.getElementById('inimigoAvatarImg') || document.getElementById('inimigoAvatar');
 
@@ -864,62 +863,93 @@ function renderBadgesStatus(statusArray) {
     });
 }
 let currentUser = "";
-
-function registrar() {
-    let u = document.getElementById('inputUser').value.trim();
-    let p = document.getElementById('inputPass').value.trim();
-    if (!u || !p) return alert("Preencha usuário e senha!");
-    
-    let userKey = u.toLowerCase(); // Chave em minúsculo para evitar duplicatas
-    
-    let users = JSON.parse(localStorage.getItem('rpgUsers') || '{}');
-    if (users[userKey]) return alert("Este nome de usuário já existe!");
-    
-    // Salvamos a chave em minúsculo, mas guardamos o nome original (ex: "Juninho") para ficar bonito no placar
-    users[userKey] = { nome: u, senha: p };
-    localStorage.setItem('rpgUsers', JSON.stringify(users));
-    alert("Conta criada com sucesso! Você já pode entrar.");
-}
-
-function logar() {
+let dadosPlacarOnline = []; // Guarda temporariamente os dados carregados do Firebase
+async function registrar() {
     let u = document.getElementById('inputUser').value.trim();
     let p = document.getElementById('inputPass').value.trim();
     if (!u || !p) return alert("Preencha usuário e senha!");
     
     let userKey = u.toLowerCase();
-    let users = JSON.parse(localStorage.getItem('rpgUsers') || '{}');
-    
-    if (users[userKey] && users[userKey].senha === p) {
-        currentUser = users[userKey].nome; // Puxa o nome com as letras maiúsculas originais
-        document.getElementById('telaLogin').classList.add('hidden');
-        document.getElementById('telaSelecaoClasse').classList.remove('hidden');
-    } else {
-        alert("Usuário ou senha incorretos!");
+
+    try {
+        const userDoc = await db.collection('usuarios').doc(userKey).get();
+        if (userDoc.exists) {
+            return alert("Este nome de usuário já existe!");
+        }
+
+        await db.collection('usuarios').doc(userKey).set({
+            nome: u,
+            senha: p
+        });
+
+        alert("Conta criada com sucesso! Você já pode entrar.");
+    } catch (error) {
+        console.error("Erro ao registrar:", error);
+        alert("Erro ao criar conta no servidor.");
     }
 }
-function salvarPontuacao() {
-    let placar = JSON.parse(localStorage.getItem('rpgPlacar') || '[]');
-    
-    placar.push({
-        user: currentUser,
-        classe: gameState.player.classeNome,
-        rodada: gameState.mortosTotais,
-        stats: gameState.player // Salva TODOS os status de uma vez
-    });
 
-    placar.sort((a, b) => b.rodada - a.rodada);
-    localStorage.setItem('rpgPlacar', JSON.stringify(placar));
+async function logar() {
+    let u = document.getElementById('inputUser').value.trim();
+    let p = document.getElementById('inputPass').value.trim();
+    if (!u || !p) return alert("Preencha usuário e senha!");
+    
+    let userKey = u.toLowerCase();
+
+    try {
+        const userDoc = await db.collection('usuarios').doc(userKey).get();
+        if (userDoc.exists && userDoc.data().senha === p) {
+            currentUser = userDoc.data().nome;
+            document.getElementById('telaLogin').classList.add('hidden');
+            document.getElementById('telaSelecaoClasse').classList.remove('hidden');
+        } else {
+            alert("Usuário ou senha incorretos!");
+        }
+    } catch (error) {
+        console.error("Erro ao logar:", error);
+        alert("Erro ao realizar login no servidor.");
+    }
+}
+async function salvarPontuacao() {
+    try {
+        await db.collection('placar').add({
+            user: currentUser,
+            classe: gameState.player.classeNome,
+            rodada: gameState.mortosTotais,
+            stats: gameState.player,
+            criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        console.log("Pontuação salva com sucesso no Firebase!");
+    } catch (error) {
+        console.error("Erro ao salvar pontuação:", error);
+    }
 }
 
-function abrirPlacar() {
+async function abrirPlacar() {
     const lista = document.getElementById('listaPlacar');
-    lista.innerHTML = '';
-    let placar = JSON.parse(localStorage.getItem('rpgPlacar') || '[]');
+    lista.innerHTML = '<p class="text-center text-slate-400 text-sm my-4">Carregando placar online...</p>';
+    document.getElementById('modalPlacar').classList.remove('hidden');
 
-    if (placar.length === 0) {
-        lista.innerHTML = '<p class="text-center text-slate-500 text-sm mt-4">Nenhuma pontuação registrada.</p>';
-    } else {
-        placar.forEach((run, index) => {
+    try {
+        // Busca os 50 melhores resultados ordenados pela maior rodada
+        const snapshot = await db.collection('placar')
+            .orderBy('rodada', 'desc')
+            .limit(50)
+            .get();
+
+        lista.innerHTML = '';
+        dadosPlacarOnline = [];
+
+        if (snapshot.empty) {
+            lista.innerHTML = '<p class="text-center text-slate-500 text-sm mt-4">Nenhuma pontuação registrada ainda.</p>';
+            return;
+        }
+
+        let index = 0;
+        snapshot.forEach(doc => {
+            const run = doc.data();
+            dadosPlacarOnline.push(run);
+
             const div = document.createElement('div');
             div.className = "bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-amber-500/50 cursor-pointer flex justify-between items-center transition";
             div.onclick = () => mostrarDetalhesJogador(index);
@@ -935,10 +965,13 @@ function abrirPlacar() {
                 <div class="font-black text-indigo-400 text-xl">${run.rodada}</div>
             `;
             lista.appendChild(div);
+            index++;
         });
-    }
 
-    document.getElementById('modalPlacar').classList.remove('hidden');
+    } catch (error) {
+        console.error("Erro ao buscar placar:", error);
+        lista.innerHTML = '<p class="text-center text-red-400 text-sm mt-4">Erro ao carregar o placar online.</p>';
+    }
 }
 
 function fecharPlacar() {
@@ -946,8 +979,8 @@ function fecharPlacar() {
 }
 
 function mostrarDetalhesJogador(index) {
-    let placar = JSON.parse(localStorage.getItem('rpgPlacar') || '[]');
-    let run = placar[index];
+    let run = dadosPlacarOnline[index];
+    if (!run) return;
 
     document.getElementById('detNome').innerText = run.user;
     document.getElementById('detClasse').innerText = run.classe;
@@ -963,15 +996,14 @@ function mostrarDetalhesJogador(index) {
     const divItens = document.getElementById('detItens');
     divItens.innerHTML = '';
     
-    if (!run.itens || run.itens.length === 0) {
+    if (!run.stats.itensInventario || run.stats.itensInventario.length === 0) {
         divItens.innerHTML = '<span class="text-slate-500 text-xs">Nenhum item coletado.</span>';
     } else {
-        // Se o item for salvo como objeto com imagem
-        run.itens.forEach(item => {
+        run.stats.itensInventario.forEach(item => {
             const imgTag = document.createElement('img');
-            imgTag.src = item.img || 'caminho/para/imagem-padrao.png'; // coloque uma imagem padrão caso falhe
-            imgTag.className = "w-8 h-8 rounded border border-slate-700 bg-slate-800";
-            imgTag.title = item.nome || item; // Mostra o nome ao passar o mouse
+            imgTag.src = item.img || 'imagens/imagensitem/oculosaventureiro.png';
+            imgTag.className = "w-8 h-8 rounded border border-slate-700 bg-slate-800 object-cover";
+            imgTag.title = item.nome || item;
             divItens.appendChild(imgTag);
         });
     }
