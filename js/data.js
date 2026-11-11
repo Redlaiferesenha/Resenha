@@ -35,7 +35,26 @@ const CATALOGO_ITENS = [
 
 const CATALOGO_ITENS_BOSS = [
     { id: 1, nome: "Máscara de Lobo", img: "imagens/imagensitem/mascaralobo.png", desc: "+4 Max HP, +4 Atk, -2 Def (Cura 4 HP)", efeito: (p) => { p.vidamaxpla += 4; curarPlayer(4); p.atkpla += 4; p.defpla -= 2; } },
-    { id: 2, nome: "Livro Endiabrado", img: "imagens/imagensitem/livroendiabrado.png", desc: "+3 Atk, +3 Dano. Perca 25% do HP atual", efeito: (p) => { p.atkpla += 3; p.danpla += 3; p.vidaatualpla = Math.floor(p.vidaatualpla * 0.75); } }
+    { id: 2, nome: "Livro Endiabrado", img: "imagens/imagensitem/livroendiabrado.png", desc: "+3 Atk, +3 Dano. Perca 25% do HP atual", efeito: (p) => { p.atkpla += 3; p.danpla += 3; p.vidaatualpla = Math.floor(p.vidaatualpla * 0.75); } },
+    { id: 3, nome: "Pote Guloso", img: "imagens/imagensitem/poteguloso.png", desc: "Permite pegar 2 itens no próximo inimigo derrotado (Consumível)", efeito: (p) => { gameState.potegulosoAtivo = true; } },
+    { id: 4, nome: "Aura do Monstro", img: "imagens/imagensitem/auramonstro.png", desc: "Quando zerar o HP, revive com 100% de HP (Consumível)", efeito: (p) => { gameState.auraMonstroAtiva = true; } },
+    { id: 5, nome: "Calvície Vampírica", img: "imagens/imagensitem/calvicevampirica.png", desc: "Roubo de vida permanente (60% do dano) mas perde 50% HP Max", efeito: (p) => { 
+        p.vidamaxpla = Math.floor(p.vidamaxpla * 0.5); 
+        if (p.vidaatualpla > p.vidamaxpla) p.vidaatualpla = p.vidamaxpla; 
+        gameState.calviceVampiricaAtiva = true; 
+    }},
+    { id: 6, nome: "Escudo Sorridente", img: "imagens/imagensitem/escudosorridente.png", desc: "+5 Defesa, +3 Redução de Dano (RD), -3 Atk", efeito: (p) => { p.defpla += 5; p.rd += 3; p.atkpla -= 3; } },
+    { id: 7, nome: "Definitivamente não é Césio", img: "imagens/imagensitem/cesio.png", desc: "+10 Energia Max, +1 Efeitos de Status, Perca 25% HP Max", efeito: (p) => { 
+        p.energiamax += 10; p.energiaatual += 10; 
+        p.vidamaxpla = Math.floor(p.vidamaxpla * 0.75); 
+        if (p.vidaatualpla > p.vidamaxpla) p.vidaatualpla = p.vidamaxpla;
+        gameState.danchama += 1; gameState.redconge += 1; gameState.danven += 1; gameState.dansang += 1; gameState.rodormin += 1;
+    }},
+    { id: 8, nome: "Ensinamentos do mago da era antiga", img: "imagens/imagensitem/ensinamentosmago.png", desc: "+3 em todos efeitos de status, perde 9 de Energia Max", efeito: (p) => { 
+        p.energiamax -= 9; 
+        if (p.energiaatual > p.energiamax) p.energiaatual = p.energiamax;
+        gameState.danchama += 3; gameState.redconge += 3; gameState.danven += 3; gameState.dansang += 3; gameState.rodormin += 3;
+    }}
 ];
 let gameState = {
     rodada: 1,
