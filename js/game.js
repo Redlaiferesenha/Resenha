@@ -567,7 +567,18 @@ function spawnNovoInimigo() {
 
     logMsg(`⚔️ Um <b>${gameState.inimigo.nome}</b> surge!`, 'enemy');
 }
-
+function rolarD20Ataque() {
+    const totalDados = 1 + (gameState.vantagemAtaque || 0);
+    let rolagens = [];
+    for (let i = 0; i < totalDados; i++) {
+        rolagens.push(Math.floor(Math.random() * 20) + 1);
+    }
+    const maior = Math.max(...rolagens);
+    if (totalDados > 1) {
+        logMsg(`🐱 <b>Gatin da Sorte:</b> Rolou [${rolagens.join(', ')}] ➔ Escolheu <b>${maior}</b>!`, 'status');
+    }
+    return maior;
+}
 function acaoAtacar() {
     AudioSys.playHit();
     const p = gameState.player;
@@ -575,7 +586,7 @@ function acaoAtacar() {
     const targetStatus = gameState.bossAtivo ? gameState.boss.status : gameState.inimigo.status;
     
     let vampiroAtivo = gameState.vampiroPassiva && temStatus(targetStatus, 'Sangramento');
-    let d20 = Math.floor(Math.random() * 20) + 1;
+    let d20 = rolarD20Ataque();
     let teste = d20 + p.atkpla + (vampiroAtivo ? 2 : 0);
 
     if (teste >= targetDef) {
@@ -633,7 +644,7 @@ function executarContraAtaque(vezes = 1) {
         if (vidaAtualTarget <= 0) break;
 
         let vampiroAtivo = gameState.vampiroPassiva && temStatus(targetStatus, 'Sangramento');
-        let d20 = Math.floor(Math.random() * 20) + 1;
+        let d20 = rolarD20Ataque();
         let teste = d20 + p.atkpla + (vampiroAtivo ? 2 : 0);
 
         if (teste >= targetDef) {
@@ -758,7 +769,7 @@ function usarHabilidade(op) {
     switch(op) {
         case 1: 
             let d20 = Math.floor(Math.random() * 20) + 1;
-            let teste = d20 + p.atkpla + gameState.habAtkBonus;
+            let d20 = rolarD20Ataque();
             let dano = Math.floor(Math.random() * p.tipdan) + 1 + p.danpla + gameState.habDanoBonus;
             let targetDef = isBoss ? target.defboss : target.defini;
             if (teste >= targetDef) {
