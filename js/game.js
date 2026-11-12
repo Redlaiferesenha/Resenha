@@ -361,6 +361,7 @@ function verificarVitoriaInimigo() {
             logMsg(`🏆 <b>VOCÊ DERROTOU O BOSS ${gameState.boss.nome}!</b>`, 'crit');
             gameState.bossAtivo = false;
             gameState.mortosTotais++;
+            uparJogador();
             if (gameState.potegulosoAtivo) {
                 gameState.saquesRestantes = 2;
                 gameState.poteGulosoConsumir = true;
@@ -438,6 +439,62 @@ function verificarVitoriaInimigo() {
         }
     }
     return false;
+}
+function uparJogador() {
+    const p = gameState.player;
+    p.vidamaxpla += 4;
+    p.energiamax += 2;
+
+    switch (p.classeNome) {
+        case "Neutro":
+            p.atkpla += 1;
+            p.danpla += 1;
+            p.defpla += 1;
+            p.rd += 1;
+            p.tipdan += 1;
+            p.critico -= 1;
+            break;
+
+        case "Defensor":
+            p.defpla += 1;
+            p.rd += 2;
+            break;
+
+        case "Assassino":
+            p.atkpla += 2;
+            p.danpla += 2;
+            p.tipdan += 1;
+            p.critico -= 1;
+            break;
+
+        case "Energético":
+            gameState.habAtkBonus += 1;
+            gameState.habDanoBonus += 1;
+            gameState.habCuraValor += 1;
+            gameState.danchama += 1;
+            gameState.redconge += 1;
+            gameState.danven += 1;
+            gameState.rodormin += 1;
+            gameState.dansang += 1;
+            break;
+
+        case "Arqueiro":
+            p.defpla += 2;
+            p.tipdan += 1;
+            p.danpla += 2;
+            break;
+
+        case "Vampiro":
+            gameState.dansang += 1;
+            gameState.dursang += 1;
+            break;
+    }
+
+    p.critico = Math.max(0, p.critico);
+    p.vidaatualpla = p.vidamaxpla;
+    p.energiaatual = p.energiamax;
+
+    logMsg(`🌟 <b>LEVEL UP!</b> Seu <b>${p.classeNome}</b> evoluiu e recuperou 100% de Vida e Energia!`, 'crit');
 }
 
 function consumirPoteGulosoSeNecessario() {
@@ -605,7 +662,7 @@ function abrirModalHabilidades() {
             case 7:
                 return `Faz o inimigo dormir por 1d${gameState.rodormin} rodadas (impede ataques).`;
             case 8:
-                return `Aplica sangramento: ${gameState.dansang} de dano por 7 rodadas (Ativa passiva do Vampiro!).`;
+                return `Aplica sangramento: ${gameState.dansang} de dano por ${gameState.dursang} rodadas (Ativa passiva do Vampiro!).`;
             default:
                 return '';
         }
@@ -712,10 +769,10 @@ function usarHabilidade(op) {
             break;
         case 8:
             if (!temStatus(target.status, 'Sangramento')) {
-                target.status.push({ tipo: 'Sangramento', danoPorRodada: gameState.dansang, reducaoDef: 0, duracao: 7 });
-                logMsg(`🩸 Aplica <b>Sangramento</b>! ${gameState.dansang} dano por 7 rodadas.`, 'spell');
+                target.status.push({ tipo: 'Sangramento', danoPorRodada: gameState.dansang, reducaoDef: 0, duracao: gameState.dursang });
+                logMsg(`🩸 Aplica <b>Sangramento</b>! ${gameState.dansang} dano por ${gameState.dursang} rodadas.`, 'spell');
             }
-            break;
+        break;
     }
 
     if (!verificarVitoriaInimigo()) finalizarTurnoPlayer();
