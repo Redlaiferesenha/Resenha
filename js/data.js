@@ -33,6 +33,8 @@ const CATALOGO_ITENS = [
     { id: 14, nome: "Labubu", img: "imagens/imagensitem/labubu.png", desc: "+2 Atk, +2 Max Energia, -3 HP", efeito: (p) => { p.atkpla += 2; p.energiamax += 2; p.vidaatualpla -= 3; } },
     { id: 15, nome: "Dente Falso de Vampiro", img: "imagens/imagensitem/dentefalso.png", desc: "+1 Dano de Sangramento", efeito: () => gameState.dansang += 1 },
     { id: 16, nome: "Pré Treino", img: "imagens/imagensitem/pretreino.jpg", desc: "+3 Max Energia, +1 Energia Atual", efeito: (p) => { p.energiamax += 3; p.energiaatual += 1; } }
+    { id: 17, nome: "Saco com Areia", img: "imagens/imagensitem/sacoComAreia.png", desc: "+2 na Redução de Ataque da Areia nos Olhos", efeito: () => gameState.redareia += 2 },
+    { id: 18, nome: "Olho Ruim", img: "imagens/imagensitem/olhoruim.jpg", desc: "+1 no Lado do Dado de Drenar Essência", efeito: () => gameState.drenarDado += 1 }
 ];
 
 const CATALOGO_ITENS_BOSS = [
