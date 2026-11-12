@@ -353,16 +353,19 @@ function processarStatus(target) {
         }
     }
 }
-
 function limparStatus(target, isBoss) {
     if (!target.status) return;
     target.status.forEach(s => {
-        if(isBoss) gameState.boss.defboss += s.reducaoDef;
-        else gameState.inimigo.defini += s.reducaoDef;
+        if (isBoss) {
+            gameState.boss.defboss += (s.reducaoDef || 0);
+            gameState.boss.atkboss += (s.reducaoAtk || 0);
+        } else {
+            gameState.inimigo.defini += (s.reducaoDef || 0);
+            gameState.inimigo.atkini += (s.reducaoAtk || 0);
+        }
     });
     target.status = [];
 }
-
 function verificarVitoriaInimigo() {
     if (gameState.bossAtivo) {
         if (gameState.boss.vidatual <= 0) {
