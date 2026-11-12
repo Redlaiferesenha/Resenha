@@ -768,8 +768,8 @@ function usarHabilidade(op) {
 
     switch(op) {
         case 1: 
-            let d20 = Math.floor(Math.random() * 20) + 1;
             let d20 = rolarD20Ataque();
+            let teste = d20 + p.atkpla + gameState.habAtkBonus;
             let dano = Math.floor(Math.random() * p.tipdan) + 1 + p.danpla + gameState.habDanoBonus;
             let targetDef = isBoss ? target.defboss : target.defini;
             if (teste >= targetDef) {
