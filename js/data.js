@@ -41,8 +41,8 @@ const CATALOGO_ITENS_BOSS = [
     { id: 4, nome: "Aura do Monstro", img: "imagens/imagensitem/auradomosntro.png", desc: "Quando zerar o HP, revive com 100% de HP (Consumível)", efeito: (p) => { gameState.auraMonstroAtiva = true; } },
     { id: 5, nome: "Calvície Vampírica", img: "imagens/imagensitem/calvice.png", desc: "Roubo de vida permanente (60% do dano) mas perde 50% HP Max", efeito: (p) => { p.vidamaxpla = Math.floor(p.vidamaxpla * 0.5); if (p.vidaatualpla > p.vidamaxpla) p.vidaatualpla = p.vidamaxpla; gameState.calviceVampiricaAtiva = true; } },
     { id: 6, nome: "Escudo Sorridente", img: "imagens/imagensitem/escudosorridente.png", desc: "+5 Defesa, +3 Redução de Dano (RD), -3 Atk", efeito: (p) => { p.defpla += 5; p.rd += 3; p.atkpla -= 3; } },
-    { id: 7, nome: "Definitivamente não é Césio", img: "imagens/imagensitem/definitivamentenãoCésio.jpg", desc: "+10 Energia Max, +1 em todos os efeitos de habilidades, Perca 25% HP Max", efeito: (p) => { p.energiamax += 10; p.energiaatual += 10; p.vidamaxpla = Math.floor(p.vidamaxpla * 0.75); if (p.vidaatualpla > p.vidamaxpla) p.vidaatualpla = p.vidamaxpla; gameState.habAtkBonus += 1; gameState.habDanoBonus += 1; gameState.habCuraValor += 1; gameState.danchama += 1; gameState.redconge += 1; gameState.danven += 1; gameState.dansang += 1; gameState.rodormin += 1; } },
-    { id: 8, nome: "Ensinamentos do mago da era antiga", img: "imagens/imagensitem/magodaeraantiga.png", desc: "+3 em todos os efeitos de habilidades, perde 9 de Energia Max", efeito: (p) => { p.energiamax -= 9; if (p.energiaatual > p.energiamax) p.energiaatual = p.energiamax; gameState.habAtkBonus += 3; gameState.habDanoBonus += 3; gameState.habCuraValor += 3; gameState.danchama += 3; gameState.redconge += 3; gameState.danven += 3; gameState.dansang += 3; gameState.rodormin += 3; } }
+    { id: 7, nome: "Definitivamente não é Césio", img: "imagens/imagensitem/definitivamentenãoCésio.jpg", desc: "+10 Energia Max, +1 em todos os efeitos de habilidades, Perca 25% HP Max", efeito: (p) => { p.energiamax += 10; p.energiaatual += 10; p.vidamaxpla = Math.floor(p.vidamaxpla * 0.75); if (p.vidaatualpla > p.vidamaxpla) p.vidaatualpla = p.vidamaxpla; gameState.habAtkBonus += 1; gameState.habDanoBonus += 1; gameState.habCuraValor += 1; gameState.danchama += 1; gameState.redconge += 1; gameState.danven += 1; gameState.dansang += 1; gameState.rodormin += 1; gameState.redareia += 1; gameState.drenarBonus += 1; gameState.drenarDado += 1; } },
+    { id: 8, nome: "Ensinamentos do mago da era antiga", img: "imagens/imagensitem/magodaeraantiga.png", desc: "+3 em todos os efeitos de habilidades, perde 9 de Energia Max", efeito: (p) => { p.energiamax -= 9; if (p.energiaatual > p.energiamax) p.energiaatual = p.energiamax; gameState.habAtkBonus += 3; gameState.habDanoBonus += 3; gameState.habCuraValor += 3; gameState.danchama += 3; gameState.redconge += 3; gameState.danven += 3; gameState.dansang += 3; gameState.rodormin += 3; gameState.redareia += 3; gameState.drenarBonus += 3; gameState.drenarDado += 3; } }
 ];
 
 let gameState = {
@@ -63,6 +63,13 @@ let gameState = {
     danven: 5,
     dansang: 3,
     dursang: 7,
+    dansang: 3,
+    dursang: 7,
+    redareia: 5,
+    durareia: 3,
+    drenarBonus: 0,
+    drenarDado: 4,
+    rodormin: 4,
     rodormin: 4,
     vampiroPassiva: false,
     saquesRestantes: 1,
@@ -118,7 +125,9 @@ const LISTA_HABILIDADES = [
     { id: 5, nome: "5. Congelamento", icone: "❄️", custo: 6, desc: "Reduz drasticamente a defesa do inimigo.", cor: "text-sky-400" },
     { id: 6, nome: "6. Envenenamento", icone: "🧪", custo: 7, desc: "Causa dano por 4 rodadas consecutivas.", cor: "text-lime-400" },
     { id: 7, nome: "7. Sono", icone: "💤", custo: 10, desc: "Faz o inimigo dormir por rodadas aleatórias (impede ataques).", cor: "text-indigo-400" },
-    { id: 8, nome: "8. Sangramento", icone: "🩸", custo: 8, desc: "Aplica sangramento por 7 rodadas (Ativa passiva do Vampiro!).", cor: "text-rose-400" }
+    { id: 8, nome: "8. Sangramento", icone: "🩸", custo: 8, desc: "Aplica sangramento por 7 rodadas (Ativa passiva do Vampiro!).", cor: "text-rose-400" },
+    { id: 9, nome: "9. Areia nos Olhos", icone: "🏜️", custo: 7, desc: "Reduz o bônus de ataque do inimigo em 5 por 3 rodadas.", cor: "text-yellow-400" },
+    { id: 10, nome: "10. Drenar Essência", icone: "🔮", custo: 6, desc: "Acerta garantido, causando dano mágico e curando 50% do dano.", cor: "text-fuchsia-400" }
 ];
 
 const BESTIARIO_INIMIGOS = [
