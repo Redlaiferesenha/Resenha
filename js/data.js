@@ -66,6 +66,7 @@ let gameState = {
     vampiroPassiva: false,
     saquesRestantes: 1,
     potegulosoAtivo: false,
+    poteGulosoConsumir: false,
     auraMonstroAtiva: false,
     calviceVampiricaAtiva: false,
 
