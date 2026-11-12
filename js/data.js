@@ -12,7 +12,8 @@ const AMBIENTE_IMAGES = {
     1: "imagens/imagensfundo/floresta.png",
     2: "imagens/imagensfundo/glacial.png",
     3: "imagens/imagensfundo/pantano.png",
-    4: "imagens/imagensfundo/vulcao.png"
+    4: "imagens/imagensfundo/vulcao.png",
+    5: "imagens/imagensfundo/Deserto.png"
 };
 
 const CATALOGO_ITENS = [
