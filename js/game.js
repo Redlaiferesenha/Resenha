@@ -361,10 +361,13 @@ function verificarVitoriaInimigo() {
             logMsg(`🏆 <b>VOCÊ DERROTOU O BOSS ${gameState.boss.nome}!</b>`, 'crit');
             gameState.bossAtivo = false;
             gameState.mortosTotais++;
-            
-            // Define a quantidade de saques para a vitória
-            gameState.saquesRestantes = gameState.potegulosoAtivo ? 2 : 1;
-            
+            if (gameState.potegulosoAtivo) {
+                gameState.saquesRestantes = 2;
+                gameState.poteGulosoConsumir = true;
+            } else {
+                gameState.saquesRestantes = 1;
+                gameState.poteGulosoConsumir = false;
+            }
             dropItemBoss();
             
             gameState.inimigosParaAmbiente++;
@@ -388,10 +391,13 @@ function verificarVitoriaInimigo() {
                 gameState.inimigosParaAmbiente = 0;
                 gerarNovoAmbiente();
             }
-
-            // Define a quantidade de saques para a vitória
-            gameState.saquesRestantes = gameState.potegulosoAtivo ? 2 : 1;
-            
+            if (gameState.potegulosoAtivo) {
+                gameState.saquesRestantes = 2;
+                gameState.poteGulosoConsumir = true;
+            } else {
+                gameState.saquesRestantes = 1;
+                gameState.poteGulosoConsumir = false;
+            }
             abrirModalLoot();
 
             if (gameState.mortosNormais > 0 && gameState.mortosNormais % 4 === 0) {
@@ -434,10 +440,10 @@ function verificarVitoriaInimigo() {
     return false;
 }
 
-// Função auxiliar para remover o Pote Guloso do inventário e desativar o efeito
 function consumirPoteGulosoSeNecessario() {
-    if (gameState.potegulosoAtivo && gameState.saquesRestantes === 0) {
+    if (gameState.potegulosoAtivo && gameState.saquesRestantes === 0 && gameState.poteGulosoConsumir) {
         gameState.potegulosoAtivo = false;
+        gameState.poteGulosoConsumir = false; // Reseta a flag
         const idx = gameState.player.itensInventario.findIndex(i => i.nome === "Pote Guloso");
         if (idx > -1) {
             gameState.player.itensInventario.splice(idx, 1);
