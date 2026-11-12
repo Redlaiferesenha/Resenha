@@ -172,6 +172,9 @@ function selecionarClasse(op) {
             gameState.danven += 1;
             gameState.rodormin += 1;
             gameState.dansang += 1;
+            gameState.redareia += 1;
+            gameState.drenarBonus += 1;
+            gameState.drenarDado += 1;
             break;
         case 5:
             gameState.player = { classeNome: "Arqueiro", classeId: 5, vidamaxpla: 24, vidaatualpla: 24, atkpla: 3, danpla: 4, defpla: 16, tipdan: 6, critico: 20, energiamax: 12, energiaatual: 12, rd: 0, itensInventario: [] };
@@ -337,8 +340,13 @@ function processarStatus(target) {
         if (s.duracao > 0) s.duracao--;
 
         if (s.duracao === 0) {
-            if (gameState.bossAtivo) gameState.boss.defboss += s.reducaoDef;
-            else gameState.inimigo.defini += s.reducaoDef;
+            if (gameState.bossAtivo) {
+                gameState.boss.defboss += (s.reducaoDef || 0);
+                gameState.boss.atkboss += (s.reducaoAtk || 0);
+            } else {
+                gameState.inimigo.defini += (s.reducaoDef || 0);
+                gameState.inimigo.atkini += (s.reducaoAtk || 0);
+            }
             
             logMsg(`✨ O efeito de <b>${s.tipo}</b> em ${target.nome} expirou.`, 'system');
             target.status.splice(i, 1);
@@ -442,9 +450,12 @@ function verificarVitoriaInimigo() {
 }
 function uparJogador() {
     const p = gameState.player;
+
+    // 1. Aumento Padrão (+4 Vida Máx e +2 Energia Máx)
     p.vidamaxpla += 4;
     p.energiamax += 2;
 
+    // 2. Bônus Específicos por Classe
     switch (p.classeNome) {
         case "Neutro":
             p.atkpla += 1;
@@ -476,6 +487,9 @@ function uparJogador() {
             gameState.danven += 1;
             gameState.rodormin += 1;
             gameState.dansang += 1;
+            gameState.redareia += 1;
+            gameState.drenarBonus += 1;
+            gameState.drenarDado += 1;
             break;
 
         case "Arqueiro":
@@ -490,7 +504,10 @@ function uparJogador() {
             break;
     }
 
+    // 3. Trava de Segurança: Crítico nunca pode ser negativo
     p.critico = Math.max(0, p.critico);
+
+    // 4. Recuperação de 100% da Vida e Energia
     p.vidaatualpla = p.vidamaxpla;
     p.energiaatual = p.energiamax;
 
@@ -663,6 +680,10 @@ function abrirModalHabilidades() {
                 return `Faz o inimigo dormir por 1d${gameState.rodormin} rodadas (impede ataques).`;
             case 8:
                 return `Aplica sangramento: ${gameState.dansang} de dano por ${gameState.dursang} rodadas (Ativa passiva do Vampiro!).`;
+            case 9:
+                return `Joga areia nos olhos: reduz o Bônus de Ataque do inimigo em ${gameState.redareia} por ${gameState.durareia} rodadas.`;
+            case 10:
+                return `Acerta garantido: causa 1d${gameState.drenarDado} + ${Math.floor(gameState.player.atkpla / 2) + gameState.drenarBonus} de dano mágico e cura 50% do valor.`;
             default:
                 return '';
         }
@@ -710,7 +731,7 @@ function usarHabilidade(op) {
     const target = gameState.bossAtivo ? gameState.boss : gameState.inimigo;
     const isBoss = gameState.bossAtivo;
 
-    const custos = {1: 3, 2: 4, 3: 4, 4: 8, 5: 6, 6: 7, 7: 10, 8: 8};
+    const custos = {1: 3, 2: 4, 3: 4, 4: 8, 5: 6, 6: 7, 7: 10, 8: 8, 9: 7, 10: 6};
     if (p.energiaatual < custos[op]) {
         logMsg(`⚠️ Energia insuficiente!`, 'normal');
         fecharModalHabilidades();
@@ -772,7 +793,23 @@ function usarHabilidade(op) {
                 target.status.push({ tipo: 'Sangramento', danoPorRodada: gameState.dansang, reducaoDef: 0, duracao: gameState.dursang });
                 logMsg(`🩸 Aplica <b>Sangramento</b>! ${gameState.dansang} dano por ${gameState.dursang} rodadas.`, 'spell');
             }
-        break;
+            break;
+        case 9:
+            if (!temStatus(target.status, 'Cegueira')) {
+                target.status.push({ tipo: 'Cegueira', danoPorRodada: 0, reducaoDef: 0, reducaoAtk: gameState.redareia, duracao: gameState.durareia });
+                if (isBoss) target.atkboss -= gameState.redareia; else target.atkini -= gameState.redareia;
+                logMsg(`🏜️ <b>Areia nos Olhos!</b> Ataque de ${target.nome} reduzido em ${gameState.redareia} por ${gameState.durareia} rodadas.`, 'spell');
+            } else {
+                logMsg(`⚠️ O inimigo já está com Areia nos Olhos!`, 'normal');
+            }
+            break;
+        case 10:
+            let danoDreno = Math.floor(Math.random() * gameState.drenarDado) + 1 + Math.floor(p.atkpla / 2) + gameState.drenarBonus;
+            if (isBoss) target.vidatual -= danoDreno; else target.vidatualini -= danoDreno;
+            let curaDreno = Math.max(1, Math.floor(danoDreno * 0.5));
+            curarPlayer(curaDreno);
+            logMsg(`🔮 <b>Drenar Essência (1d${gameState.drenarDado})!</b> Causou ${danoDreno} de dano direto e recuperou +${curaDreno} HP!`, 'spell');
+            break;
     }
 
     if (!verificarVitoriaInimigo()) finalizarTurnoPlayer();
@@ -1033,6 +1070,7 @@ function renderBadgesStatus(statusArray) {
         if (s.tipo === 'Envenenado') colorClass = "bg-lime-950 text-lime-300 border-lime-800";
         if (s.tipo === 'Sono') colorClass = "bg-indigo-950 text-indigo-300 border-indigo-800";
         if (s.tipo === 'Sangramento') colorClass = "bg-rose-950 text-rose-300 border-rose-800";
+        if (s.tipo === 'Cegueira') colorClass = "bg-yellow-950 text-yellow-300 border-yellow-800";
         let durTxt = s.duracao === -1 ? "Infinito" : `${s.duracao}t`;
         span.className = `text-[10px] font-bold border px-2 py-0.5 rounded-lg flex items-center gap-1 ${colorClass}`;
         span.innerText = `${s.tipo} (${durTxt})`;
