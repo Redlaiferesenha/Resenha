@@ -132,6 +132,7 @@ class Particle {
         if (gameState.ambienteAtual === 1) color = "rgba(34, 197, 94, ";
         if (gameState.ambienteAtual === 2) color = "rgba(56, 189, 248, ";
         if (gameState.ambienteAtual === 3) color = "rgba(163, 230, 53, ";
+        if (gameState.ambienteAtual === 5) color = "rgba(234, 179, 8, ";
         if (gameState.ambienteAtual === 0) color = "rgba(148, 163, 184, ";
 
         ctx.fillStyle = color + this.alpha + ")";
@@ -252,6 +253,11 @@ function aplicarEfeitoAmbiente(amb, player, ini, boss, isBoss, apenasInimigo = f
             }
             if(isBoss) target.atkboss += 3; else target.atkini += 3;
             break;
+        case 5:
+            if (!apenasInimigo) {
+                gameState.redareia += 2;
+            }
+            break;
     }
 }
 
@@ -277,27 +283,31 @@ function removerEfeitoAmbiente(amb, player, ini, boss, isBoss) {
             if(isBoss) target.atkboss -= 3; else target.atkini -= 3;
             gameState.danchama -= 2;
             break;
+        case 5:
+            gameState.redareia -= 2;
+            break;
     }
 }
 
 function gerarNovoAmbiente() {
     const ambAnterior = gameState.ambienteAtual;
     let novoAmb;
-    do { novoAmb = Math.floor(Math.random() * 5); } while (novoAmb === ambAnterior);
+    do { novoAmb = Math.floor(Math.random() * 6); } while (novoAmb === ambAnterior); // <-- MUDOU DE 5 PARA 6
 
     removerEfeitoAmbiente(ambAnterior, gameState.player, gameState.inimigo, gameState.boss, gameState.bossAtivo);
     gameState.ambienteAtual = novoAmb;
     aplicarEfeitoAmbiente(novoAmb, gameState.player, gameState.inimigo, gameState.boss, gameState.bossAtivo);
 
-    const nomes = ["Neutro", "Floresta 🌲", "Glacial ❄️", "Pântano ☣️", "Vulcão 🔥"];
+    const nomes = ["Neutro", "Floresta 🌲", "Glacial ❄️", "Pântano ☣️", "Vulcão 🔥", "Deserto 🏜️"];
     const descs = [
         "Nenhum efeito alterado neste ambiente.",
         "+2 Defesa para Player e -2 Ataque para Inimigos.",
         "-2 Energia Máx Player, -2 Defesa Inimigo, +1 Efeito Congelamento.",
         "-2 Ataque para ambos, +1 Defesa para Inimigos.",
-        "+3 Ataque para ambos, +2 Dano de Chamas."
+        "+3 Ataque para ambos, +2 Dano de Chamas.",
+        "Calor escaldante: 1 dano/turno no Player, 3 dano/turno no Inimigo e +2 na Areia nos Olhos."
     ];
-    const icones = ["🏛️", "🌲", "❄️", "☣️", "🔥"];
+    const icones = ["🏛️", "🌲", "❄️", "☣️", "🔥", "🏜️"];
 
     document.getElementById('ambienteNome').innerText = `Ambiente: ${nomes[novoAmb]}`;
     document.getElementById('ambienteDesc').innerText = descs[novoAmb];
@@ -819,6 +829,20 @@ function usarHabilidade(op) {
 }
 
 async function finalizarTurnoPlayer() {
+    if (gameState.ambienteAtual === 5) {
+        if (gameState.bossAtivo) {
+            gameState.boss.vidatual = Math.max(0, gameState.boss.vidatual - 3);
+            logMsg(`🏜️ <b>Calor do Deserto:</b> ${gameState.boss.nome} sofreu 3 de dano!`, 'status');
+            if (verificarVitoriaInimigo()) return;
+        } else {
+            gameState.inimigo.vidatualini = Math.max(0, gameState.inimigo.vidatualini - 3);
+            logMsg(`🏜️ <b>Calor do Deserto:</b> ${gameState.inimigo.nome} sofreu 3 de dano!`, 'status');
+            if (verificarVitoriaInimigo()) return;
+        }
+
+        gameState.player.vidaatualpla = Math.max(0, gameState.player.vidaatualpla - 1);
+        logMsg(`🏜️ <b>Calor do Deserto:</b> Você sofreu 1 de dano!`, 'enemy');
+    }
     if (gameState.bossAtivo) {
         processarStatus(gameState.boss);
         if (verificarVitoriaInimigo()) return;
